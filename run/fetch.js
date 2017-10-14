@@ -42,14 +42,14 @@ module.exports = function(kernelVersion, shouldBeLocal, cb) {
   }
 
   var displayName = 'runtime.gz.' + kernelVersion;
-  var url = 'https://github.com/runtimejs/builds/raw/master/runtime.gz.' + kernelVersion;
+  var url = 'https://github.com/usernameak/jsos-kernel-builds/raw/master/runtime.gz.' + kernelVersion;
 
-  // Newer versions are stored as GitHub releases
+  /*// Newer versions are stored as GitHub releases
   if (kernelVersion > 3) {
     var tag = ((kernelVersion >>> 20) & 0x3ff) + '.' + ((kernelVersion >>> 10) & 0x3ff) + '.' + (kernelVersion & 0x3ff);
     displayName = 'release v' + tag;
     url = 'https://github.com/runtimejs/runtime/releases/download/v' + tag + '/runtime.gz';
-  }
+  }*/
 
   var req = request(url);
 

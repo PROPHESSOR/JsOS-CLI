@@ -1,14 +1,14 @@
 {
-  "name": "runtime-cli",
+  "name": "jsos-cli",
   "version": "3.2.0",
-  "description": "runtime.js cli",
+  "description": "JsOS CLI",
   "main": "index.js",
   "scripts": {
     "test": "tape test/index.js test/package-tests.js && npm run lint",
     "lint": "eslint ."
   },
   "bin": {
-    "runtime": "bin/runtime.js"
+    "jsos": "bin/jsos.js"
   },
   "repository": {
     "type": "git",
