@@ -111,6 +111,8 @@ function getQemuArgs(opts) {
     a.push('-append "' + opts.append + '"');
   }
 
+  a.push('-soundhw pcspk');
+
   if (opts.drives.length > 0) {
     for (var i = 0; i < opts.drives.length; i++) {
       // not wrapping the filename in quotes because the Windows command prompt
