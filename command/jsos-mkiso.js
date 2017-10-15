@@ -36,10 +36,13 @@ function toKB(size) {
 module.exports = function(args, cb) {
   if (args._.length === 0) {
     args._[0] = 'JsOS.iso';
+    args._[1] = ''
   }
 
-  var filename = String(args._[0]);
-
+  const filename = String(args._[0]);
+  const foldername = String(args._[1]);
+  const kernel = args.kernel;
+  const initrd = args.initrd;
 //   var size = String(args.size);
 //   var sizeInKb = toKB(size);
 //   if (sizeInKb < 33792) {
@@ -50,7 +53,10 @@ module.exports = function(args, cb) {
 
   mkiso({
     // size: size,
-    filename: filename,
+    filename,
+    foldername,
+    kernel,
+    initrd
     // label: label
   }, cb);
 };

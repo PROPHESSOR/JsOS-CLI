@@ -17,6 +17,7 @@
 const exec = require('../run/shell-exec');
 const testCmd = require('../utils/testCmd');
 const fs = require('fs');
+const chalk = require('chalk');
 
 module.exports = function(opts, cb) {
 //   testCmd('losetup', true);
@@ -25,10 +26,32 @@ module.exports = function(opts, cb) {
 
 
     if(fs.existsSync(opts.filename)){
-        exec(`grub.mkrescue -o ${opts.filename}`, function(code, out){
+        exec(`grub.mkrescue -o ${opts.filename} ${opts.foldername}`, function(code, out){
             cb();
         });
     }else{
+        exec(`mkdir ${opts.foldername}`, function(e,){
+            if(e) return cb(e);
+
+            if(!opts.kernel) return cb("Folder doesnt not exists and kernel wasn't specified");
+            if(!opts.initrd) return cb("Folder doesnt not exists and kernel wasn't specified");
+
+            exec(`cp ${opts.kernel} ${opts.foldername}/kernel`,function(e,r){
+                if(e) return cb(e);
+
+                exec(`cp ${opts.initrd} ${opts.foldername}/initrd`,function(e,r){
+                    exec(`mkdir ${opts.foldername}/grub/`,function(e,r){
+                        const grubcfg = 'set timeout=0\nset default=0\nmenuentry "JsOS" {\n\tmultiboot /kernel\n\tmodule /initrd\n\tboot\n}"';
+                        fs.writeFile(`${opts.foldername}/grub/grub.cfg`, grubcfg, function(e){
+                            if(e) return cb(e);
+
+                            console.log(chalk.green(`The folder ${opts.foldername} was created successful!\n You should run the "jsos mkiso filename.iso ${opts.foldername}" to build the image ;)`));
+                            return cb();
+                        });
+                    });
+                })
+            })
+        })
         cb("Folder doesn't exist!");
         //TODO: Creating the folder
     }
