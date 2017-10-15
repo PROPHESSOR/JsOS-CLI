@@ -240,13 +240,7 @@ function help() {
   console.log('Commands:');
 
   for (const cmd of cmds) {
-    if (cmd instanceof Array) {
-      for(const j of cmd){
-        console.log('  ' + pad(j.name, 14) + padDescription(j.description));  
-      }
-    } else {
-      console.log('  ' + pad(cmd.name, 14) + padDescription(cmd.description));
-    }
+    console.log('  ' + pad(cmd.name, 14) + padDescription(cmd.description));
   }
 }
 
@@ -262,9 +256,15 @@ function commandHelp(command) {
   console.log('(' + command.description + ')');
 
   if (command.mainArg) {
+    const ma = command.mainArg;
     console.log('');
-    console.log('  ' + pad('<' + command.mainArg.name + '>', 14) +
-      padDescription(command.mainArg.description));
+    if (ma instanceof Array) {
+      for (const arg of ma) {
+        console.log('  ' + pad(`<${arg.name}>`, 14) + padDescription(arg.description));
+      }
+    } else {
+      console.log('  ' + pad(`<${ma.name}>`, 14) + padDescription(ma.description));
+    }
   }
 
   if (command.args) {
