@@ -13,13 +13,11 @@ rules:
   strict:
     - 2
     - 'global'
-  max-len:
-    - 1
-    -
-      code: 100
-      tabWidth: 2
-      ignoreComments: true
-      ignoreUrls: true
+
+  code: 100
+  tabWidth: 2
+  ignoreComments: true
+  ignoreUrls: true
   consistent-return: 0
   no-underscore-dangle: 0
   global-require: 0
