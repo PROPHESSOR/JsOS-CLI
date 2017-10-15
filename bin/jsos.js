@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // Copyright 2015-present runtime.js project authors
+// Copyright 2015-use JsOS project authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,7 +46,7 @@ var runArgs = [
   { name: 'port', type: 'number', default: 0,
     description: 'Redirect TCP/UDP connections on the host port to the runtime.js' },
   { name: 'append', type: 'string', default: '',
-    description: 'Append string to runtime.js command line' },
+    description: 'Append string to jsos kernel command line' },
   { name: 'dry-run', type: 'boolean', default: false,
     description: 'Test input but do not launch the VM' },
   { name: 'verbose', type: 'boolean', default: false,
@@ -69,6 +70,13 @@ var mkimgArgs = [
     description: 'Size of the new image, defaults to 1 gigabyte. See `qemu-img --help` for sizes.\nMust be >= 33792 kb (33 mb)' },
   { name: 'label', type: 'string', default: 'RUNTIMEJS',
     description: 'Label of the new image, defaults to "RUNTIMEJS"' }
+];
+
+var mkisoArgs = [
+  // { name: 'size', type: 'string', default: '1G',
+  //   description: 'Size of the new image, defaults to 1 gigabyte. See `qemu-img --help` for sizes.\nMust be >= 33792 kb (33 mb)' },
+  // { name: 'label', type: 'string', default: 'RUNTIMEJS',
+  //   description: 'Label of the new image, defaults to "RUNTIMEJS"' }
 ];
 
 var cmds = [{
@@ -99,12 +107,17 @@ var cmds = [{
   args: mkimgArgs,
   mainArg: { name: 'filename', description: 'The filename for the newly created disk image including the extension,\ndefaults to "disk.img"' }
 }, {
+  name: 'mkiso',
+  description: 'Build the JsOS ISO file',
+  args: mkisoArgs,
+  mainArg: { name: 'filename', description: 'The filename for the newly created disk image including the extension,\ndefaults to "JsOS.iso"' }
+}, {
   name: 'help',
   description: 'Print this usage help'
 }];
 
 function help() {
-  console.log('USAGE: runtime <command> [<args>]');
+  console.log('USAGE: jsos <command> [<args>]');
   console.log('');
   console.log('Commands:');
 
@@ -119,7 +132,7 @@ function padDescription(t) {
 }
 
 function commandHelp(command) {
-  console.log('USAGE: runtime ' + command.name +
+  console.log('USAGE: jsos ' + command.name +
       (command.args ? ' [<args>]' : '') +
       (command.mainArg ? (' <' + command.mainArg.name + '>') : ''));
 
@@ -162,7 +175,7 @@ if (command === '--version') {
 }
 
 if (command === 'completion') {
-  tabtab.complete('runtime', function(err, data) {
+  tabtab.complete('jsos', function(err, data) {
     if (err || !data) {
       return;
     }
@@ -218,7 +231,7 @@ for (var i = 0; i < cmds.length; ++i) {
       return;
     }
 
-    var commandFunction = require('../command/runtime-' + cmd.name);
+    var commandFunction = require('../command/jsos-' + cmd.name);
     commandFunction(argv, function(err) {
       if (err) {
         if (typeof err === 'string') {
