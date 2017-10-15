@@ -1,4 +1,5 @@
 // Copyright 2015-present runtime.js project authors
+// Copyright 2017-edited JsOS project authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -150,7 +151,7 @@ module.exports = function(opts, cb) {
   }
 
   if (!coreConfig || !indexPath) {
-    cb('directory does not contain runtime.js library, please run "npm install runtimejs"');
+    cb('directory does not contain JsOS sources');// runtime.js library, please run "npm install jsos"');
     return;
   }
 

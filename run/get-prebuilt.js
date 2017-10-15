@@ -1,4 +1,5 @@
 // Copyright 2015-present runtime.js project authors
+// Copyright 2017-edited jsos project authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,14 +20,14 @@ var fetch = require('./fetch');
 
 module.exports = function(kernelVersion, shouldBeLocal, cb) {
   var basePath = shouldBeLocal ? __dirname : process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
-  var kernelsDir = path.resolve(basePath, '.runtime');
+  var kernelsDir = path.resolve(basePath, '.jsos-kernel');
   if (!shell.test('-d', kernelsDir)) {
     shell.mkdir(kernelsDir);
   }
 
-  var tmpName = 'runtime.' + kernelVersion + '.download';
+  var tmpName = 'jsos.' + kernelVersion + '.download';
   var tmpFile = path.resolve(kernelsDir, tmpName);
-  var resultFile = path.resolve(kernelsDir, 'runtime.' + kernelVersion);
+  var resultFile = path.resolve(kernelsDir, 'jsos.' + kernelVersion);
 
   if (shell.test('-f', resultFile)) {
     return cb(null, resultFile);

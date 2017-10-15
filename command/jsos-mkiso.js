@@ -14,7 +14,7 @@
 
 'use strict';
 
-var mkimg = require('../mkimg');
+var mkiso = require('../mkiso');
 
 const multipliers = {
   'B': 0.001,           // byte
@@ -35,22 +35,22 @@ function toKB(size) {
 
 module.exports = function(args, cb) {
   if (args._.length === 0) {
-    args._[0] = 'disk.img';
+    args._[0] = 'JsOS.iso';
   }
 
   var filename = String(args._[0]);
 
-  var size = String(args.size);
-  var sizeInKb = toKB(size);
-  if (sizeInKb < 33792) {
-    return cb('invalid size for FAT32. minimum limit of 33792 kb (~33 mb)');
-  }
+//   var size = String(args.size);
+//   var sizeInKb = toKB(size);
+//   if (sizeInKb < 33792) {
+//     return cb('invalid size for FAT32. minimum limit of 33792 kb (~33 mb)');
+//   }
 
-  var label = String(args.label).toUpperCase(); // valid names for FAT volumes are upper case
+//   var label = String(args.label).toUpperCase(); // valid names for FAT volumes are upper case
 
-  mkimg({
-    size: size,
+  mkiso({
+    // size: size,
     filename: filename,
-    label: label
+    // label: label
   }, cb);
 };

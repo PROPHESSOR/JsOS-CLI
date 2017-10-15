@@ -14,22 +14,32 @@
 
 'use strict';
 
-var exec = require('../run/shell-exec');
-var testCmd = require('../utils/testCmd');
+const exec = require('../run/shell-exec');
+const testCmd = require('../utils/testCmd');
+const fs = require('fs');
 
 module.exports = function(opts, cb) {
 //   testCmd('losetup', true);
 //   testCmd('mkfs.msdos', false);
-    testCmd('grub-mkrescue')
+    testCmd('grub-mkrescue', false);
 
-  exec('losetup -f', function(code, output) {
-    var mountpoint = output.trim();
-    exec('losetup ' + mountpoint + ' ' + opts.filename, function(code, output) {
-      exec('mkfs.msdos -F 32 -n "' + opts.label + '" ' + mountpoint, function(code, output) {
-        exec('losetup -d ' + mountpoint, function(code, output) {
-          cb();
+
+    if(fs.existsSync(opts.filename)){
+        exec(`grub.mkrescue -o ${opts.filename}`, function(code, out){
+            cb();
         });
-      });
-    });
-  });
+    }else{
+        cb("Folder doesn't exist!");
+        //TODO: Creating the folder
+    }
+//   exec('losetup -f', function(code, output) {
+//     var mountpoint = output.trim();
+//     exec('losetup ' + mountpoint + ' ' + opts.filename, function(code, output) {
+//       exec('mkfs.msdos -F 32 -n "' + opts.label + '" ' + mountpoint, function(code, output) {
+//         exec('losetup -d ' + mountpoint, function(code, output) {
+//           cb();
+//         });
+//       });
+//     });
+//   });
 };
