@@ -1,4 +1,4 @@
-// Copyright 2016-present runtime.js project authors
+// Copyright 2017-present JsOS project authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,14 +18,17 @@ var exec = require('../run/shell-exec');
 var testCmd = require('../utils/testCmd');
 
 module.exports = function(opts, cb) {
-  testCmd('hdiutil', true);
-  testCmd('diskutil', true);
+//   testCmd('losetup', true);
+//   testCmd('mkfs.msdos', false);
+    testCmd('grub-mkrescue')
 
-  exec('hdiutil attach ' + opts.filename + ' -nomount', function(code, output) {
+  exec('losetup -f', function(code, output) {
     var mountpoint = output.trim();
-    exec('diskutil eraseVolume fat32 "' + opts.label + '" ' + mountpoint, function(code, output) {
-      exec('hdiutil detach ' + mountpoint, function(code, output) {
-        cb();
+    exec('losetup ' + mountpoint + ' ' + opts.filename, function(code, output) {
+      exec('mkfs.msdos -F 32 -n "' + opts.label + '" ' + mountpoint, function(code, output) {
+        exec('losetup -d ' + mountpoint, function(code, output) {
+          cb();
+        });
       });
     });
   });

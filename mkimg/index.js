@@ -17,7 +17,7 @@
 var chalk = require('chalk');
 var shell = require('shelljs');
 var exec = require('../run/shell-exec');
-var testCmd = require('./testCmd');
+var testCmd = require('../utils/testCmd');
 
 module.exports = function(opts, cb) {
   var helper;
