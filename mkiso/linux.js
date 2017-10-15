@@ -30,17 +30,17 @@ module.exports = function(opts, cb) {
             cb();
         });
     }else{
-        exec(`mkdir ${opts.foldername}`, function(e,){
+        exec(`mkdir ${opts.foldername}`, function(e){
             if(e) return cb(e);
 
             if(!opts.kernel) return cb("Folder doesnt not exists and kernel wasn't specified");
             if(!opts.initrd) return cb("Folder doesnt not exists and kernel wasn't specified");
 
-            exec(`cp ${opts.kernel} ${opts.foldername}/kernel`,function(e,r){
+            exec(`cp ${opts.kernel} ${opts.foldername}/kernel`,function(e){
                 if(e) return cb(e);
 
-                exec(`cp ${opts.initrd} ${opts.foldername}/initrd`,function(e,r){
-                    exec(`mkdir ${opts.foldername}/grub/`,function(e,r){
+                exec(`cp ${opts.initrd} ${opts.foldername}/initrd`,function(e){
+                    exec(`mkdir ${opts.foldername}/grub/`,function(e){
                         const grubcfg = 'set timeout=0\nset default=0\nmenuentry "JsOS" {\n\tmultiboot /kernel\n\tmodule /initrd\n\tboot\n}"';
                         fs.writeFile(`${opts.foldername}/grub/grub.cfg`, grubcfg, function(e){
                             if(e) return cb(e);
