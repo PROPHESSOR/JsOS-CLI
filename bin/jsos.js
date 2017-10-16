@@ -1,5 +1,5 @@
 #!/usr/bin/env node
- // Copyright 2015-present runtime.js project authors
+// Copyright 2015-present runtime.js project authors
 // Copyright 2017-use JsOS project authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -366,10 +366,10 @@ for (var i = 0; i < cmds.length; ++i) {
         } else {
           throw err;
         }
+        process.exit(1);
       } else {
         console.log(chalk.green('OK!'));
       }
-      process.exit(1);
     });
 
     break;
