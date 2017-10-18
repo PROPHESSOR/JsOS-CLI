@@ -1,4 +1,5 @@
 // Copyright 2015-present runtime.js project authors
+// Copyright 2017-use JsOS project authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +14,8 @@
 // limitations under the License.
 
 'use strict';
-var runtimePack = require('./runtime-pack');
-var runtimeRun = require('./runtime-run');
+var runtimePack = require('./jsos-pack');
+var runtimeRun = require('./jsos-run');
 
 module.exports = function(args, cb) {
   args._ = ['./'];

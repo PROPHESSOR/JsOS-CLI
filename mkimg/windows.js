@@ -15,7 +15,7 @@
 'use strict';
 
 var exec = require('../run/shell-exec');
-var testCmd = require('./testCmd');
+var testCmd = require('../utils/testCmd');
 var path = require('path');
 var os = require('os');
 var fs = require('fs');

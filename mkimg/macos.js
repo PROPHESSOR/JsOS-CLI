@@ -15,7 +15,7 @@
 'use strict';
 
 var exec = require('../run/shell-exec');
-var testCmd = require('./testCmd');
+var testCmd = require('../utils/testCmd');
 
 module.exports = function(opts, cb) {
   testCmd('hdiutil', true);
