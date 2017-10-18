@@ -26,7 +26,7 @@ module.exports = function (opts) {
     } else if (process.platform === 'win32') {
         return console.log(chalk.red("Windows doesn't supported!"))
     } else if (process.platform === 'linux') { //FIXME: It doesn't works! Output file is broken
-        exec(`tail -c +16 ${filename} > ${filename}.gz`,(e)=>console.log(e?chalk.red(e):chalk.green("OK!!!")));
+        exec(`{ printf "\x1f\x8b\x08\x00\x00\x00\x00\x00"; tail -c +25 ${filename}; } > ${filename}.gz`,(e)=>console.log(e?chalk.red(e):chalk.green("OK!!!")));
     } else {
         return console.log(chalk.red('unknown/unsupported platform'));
     }
