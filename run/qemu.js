@@ -58,7 +58,7 @@ function getQemuArgs(opts) {
   ];
 
   if (opts.net && opts.net !== 'none') {
-    a.push('-net nic,model=virtio,macaddr=1a:46:0b:ca:bc:7c');
+    a.push('-net nic,model='+opts.netdev+',macaddr=1a:46:0b:ca:bc:7c');
 
     switch (opts.net) {
     case 'tap':

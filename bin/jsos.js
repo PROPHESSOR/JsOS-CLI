@@ -60,6 +60,12 @@ var runArgs = [{
     description: 'Enable network (value can be "none", "user", "tap" or\n"bridge", defaults to "user")'
   },
   {
+    name: 'netdev',
+    type: 'string',
+    default: 'rtl8139',
+    description: 'Set network device model (defaults to "rtl8139")'
+  },
+  {
     name: 'netdump',
     type: 'boolean',
     default: false,

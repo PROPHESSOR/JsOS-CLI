@@ -34,6 +34,7 @@ module.exports = function(args, cb) {
   }
   
   var qemuNet = args.net;
+  var qemuNetdev = args.netdev;
 
   var extraPorts = [];
   if (typeof args.port === 'number') {
@@ -73,6 +74,7 @@ module.exports = function(args, cb) {
       initrd: initrdFile,
       kernel: kernelFile,
       net: qemuNet,
+      netdev: qemuNetdev,
       netdump: qemuNetdump,
       curses: qemuCurses,
       kvm: qemuKVM,
