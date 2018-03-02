@@ -61,6 +61,8 @@ Arguments:
                 "bridge", defaults to "user")
   --netdump     Save network activity to a file
   --kvm         Enable Linux KVM (much faster virtualization)
+  --pcspk       Enable PCSpeaker emulation (if you haven't native)
+  --usb         Enable usb (ehci) device emulation (for testing)
   --curses      Use text-mode graphics
   --port        Redirect TCP/UDP connections on the host port to the runtime.js
   --append      Append string to runtime.js command line

@@ -47,6 +47,8 @@ module.exports = function(args, cb) {
   var qemuNetdump = !!args.netdump;
   var qemuCurses = !!args.curses;
   var qemuKVM = !!args.kvm;
+  var qemuUSB = !!args.usb;
+  var qemuPCSpk = !!args.pcspk;
   var qemuAppend = args.append || '';
   var qemuNographic = !!args.nographic;
   var qemuVirtioRng = !!args['virtio-rng'];
@@ -78,6 +80,8 @@ module.exports = function(args, cb) {
       netdump: qemuNetdump,
       curses: qemuCurses,
       kvm: qemuKVM,
+      usb: qemuUSB,
+      pcspk: qemuPCSpk,
       qemuCommandAppend: qemuCommandAppend,
       append: qemuAppend,
       dryRun: dryRun,

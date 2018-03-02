@@ -78,6 +78,18 @@ var runArgs = [{
     description: 'Enable Linux KVM (much faster virtualization)'
   },
   {
+    name: 'usb',
+    type: 'boolean',
+    default: false,
+    description: 'Enable usb (ehci) device emulation (for testing)'
+  },
+  {
+    name: 'pcspk',
+    type: 'boolean',
+    default: false,
+    description: 'Enable PCSpeaker emulation (if you haven\'t native)'
+  },
+  {
     name: 'curses',
     type: 'boolean',
     default: false,

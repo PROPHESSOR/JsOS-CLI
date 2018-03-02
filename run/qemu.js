@@ -96,6 +96,14 @@ function getQemuArgs(opts) {
     a.push('-no-kvm-irqchip');
   }
 
+  if(opts.usb) {
+    a.push('-usb -device usb-ehci,id=ehci -device usb-tablet,bus=usb-bus.0');
+  }
+
+  if(opts.pcspk) {
+    a.push('-soundhw pcspk');
+  }
+
   if (opts.qemuCommandAppend) {
     a.push(String(opts.qemuCommandAppend));
   }
