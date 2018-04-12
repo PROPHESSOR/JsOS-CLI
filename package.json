@@ -1,6 +1,6 @@
 {
   "name": "jsos-cli",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "JsOS CLI",
   "main": "index.js",
   "scripts": {
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:runtimejs/runtime-cli.git"
+    "url": "git@github.com:PROPHESSOR/JsOS-CLI.git"
   },
-  "author": "runtime.js project authors",
+  "author": "JsOS and runtime.js projects authors",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/runtimejs/runtime-cli/issues"
+    "url": "https://github.com/PROPHESSOR/jsos-cli/issues"
   },
-  "homepage": "http://runtimejs.org",
+  "homepage": "https://github.com/PROPHESSOR/JsOS",
   "dependencies": {
     "buffer-crc32": "^0.2.5",
     "chalk": "^1.1.1",

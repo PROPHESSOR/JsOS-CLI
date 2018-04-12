@@ -1,19 +1,18 @@
-# runtime-cli
-Command line tools for `runtime.js`.
+# JsOS-CLI
+Command line tools for `JsOS`.
 
-[![Build Status](https://travis-ci.org/runtimejs/runtime-cli.svg?branch=master)](https://travis-ci.org/runtimejs/runtime-cli)
-[![npm](https://img.shields.io/npm/v/runtime-cli.svg)](https://www.npmjs.com/package/runtime-cli)
+[![npm](https://img.shields.io/npm/v/runtime-cli.svg)](https://www.npmjs.com/package/jsos-cli)
 
 ### Installation
 
 ```
-npm install -g runtime-cli
+npm i -g jsos-cli
 ```
 
 ### Usage
 
 ```
-USAGE: runtime <command> [<args>]
+USAGE: jsos <command> [<args>]
 
 Commands:
   start         Quickly start runtime.js VM using current directory
@@ -21,40 +20,40 @@ Commands:
   pack          Package specified directory into ramdisk bundle
   run           Run runtime.js VM using specified ramdisk bundle
   show          Print VM output or log
-  mkimg         Easily create a disk image for use with runtime.js
+  mkimg         Easily create a disk image for use with JsOS
+  mkiso			Easily create a bootable ISO image
   help          Print this usage help
 ```
 
 ### Getting Started
 
-To setup a project simply install `runtimejs` package as a dependency. It doesn't need to be `require()`-d anywhere, just make sure it exists in `node_modules`.
+To setup a project simply clone `JsOS` repository
 
 ```
-mkdir project
-cd project
-npm install runtimejs
-echo "console.log('ok')" > index.js
+git clone https://github.com/PROPHESSOR/JsOS
+cd JsOS
+npm i
 ```
 
 Run project in QEMU VM:
 
 ```
-runtime start
+jsos start
 ```
 
 Or let it watch directory for changes and restart QEMU automatically:
 
 ```
-runtime watch
+jsos watch
 ```
 
 ### Commands
 
-`start`, `watch` and `run` commands are very similar and have pretty much the same list of arguments. They all launch runtime.js in the QEMU VM.
+`start`, `watch` and `run` commands are very similar and have pretty much the same list of arguments. They all launch JsOS in the QEMU VM.
 
 ```
-USAGE: runtime start [<args>]
-(Quickly start runtime.js VM using current directory)
+USAGE: jsos start [<args>]
+(Quickly start JsOS VM using current directory)
 
 Arguments:
   --net         Enable network (value can be "none", "user", "tap" or
@@ -64,20 +63,22 @@ Arguments:
   --pcspk       Enable PCSpeaker emulation (if you haven't native)
   --usb         Enable usb (ehci) device emulation (for testing)
   --curses      Use text-mode graphics
-  --port        Redirect TCP/UDP connections on the host port to the runtime.js
-  --append      Append string to runtime.js command line
+  --port        Redirect TCP/UDP connections on the host port to the JsOS
+  --append      Append string to JsOS command line
   --dry-run     Test input but do not launch the VM
   --verbose     Output extra info like VM command line
-  --virtio-rng  Enable VIRTIO-RNG entropy source for the runtime.js
+  --virtio-rng  Enable VIRTIO-RNG entropy source for the JsOS
   --nographic   Disable graphics, run in command line mode
   --kernel      Specify custom kernel binary file to use
   --local       Download the kernel locally (i.e. in the module's directory)
+  --pcspk		Enable PCSpeaker emulation
+  --usb			Enable USB EHCI device emulation
 ```
 
 `pack` packages directory into ramdisk/initrd bundle. This is useful if you'd like to ship compiled bundle somewhere and don't want to run it locally.
 
 ```
-USAGE: runtime pack [<args>] <directory>
+USAGE: jsos pack [<args>] <directory>
 (Package specified directory into ramdisk bundle)
 
   <directory>   Directory to package
@@ -89,11 +90,11 @@ Arguments:
   --add-dir     Add a directory into the package (format: <path> or <path>:<package-path>)
 ```
 
-`mkimg` creates a FAT disk image for use with runtime.js. On some systems, you may need to use root/administrator privileges. Depends on qemu-img on all platforms, hdiutil and diskutil on macOS (builtin), losetup and mkfs.msdos on Linux (included on most distributions), and diskpart on Windows (bulitin).
+`mkimg` creates a FAT disk image for use with JsOS. On some systems, you may need to use root/administrator privileges. Depends on qemu-img on all platforms, hdiutil and diskutil on macOS (builtin), losetup and mkfs.msdos on Linux (included on most distributions), and diskpart on Windows (bulitin).
 
 ```
-USAGE: runtime mkimg [<args>] <filename>
-(Easily create a disk image for use with runtime.js)
+USAGE: jsos mkimg [<args>] <filename>
+(Easily create a disk image for use with JsOS)
 
   <filename>    The filename for the newly created disk image including the extension,
                 default to "disk.img"
@@ -106,7 +107,7 @@ Arguments:
 ### Environment Variables
 While there is a [proposal](https://github.com/runtimejs/runtime/issues/134) to add envirionment variables from the command line, there is currently no officially supported process for passing them into a runtime instance. However, there is a work around that will allow the passing of Kernel Command Line arguments instead.
 ```
-runtime run --append <your env args> initrd
+jsos run --append <your env args> initrd
 ```
 To access this variable in your code use the following:
 ```
@@ -120,8 +121,8 @@ arrayOfArguments[i]; // where i is the index of your argument in the array
 Enables tab-completion for all commands.
 
 ```
-runtime completion >> ~/.bashrc
-runtime completion >> ~/.zshrc
+jsos completion >> ~/.bashrc
+jsos completion >> ~/.zshrc
 ```
 
 ### License
