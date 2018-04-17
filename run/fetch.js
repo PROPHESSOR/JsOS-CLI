@@ -42,7 +42,7 @@ module.exports = function(kernelVersion, shouldBeLocal, cb) {
   }
 
   var displayName = 'runtime.gz.' + kernelVersion;
-  var url = 'https://github.com/usernameak/jsos-kernel-builds/raw/master/runtime.gz.' + kernelVersion;
+  var url = 'https://github.com/JsOS-Team/jsos-kernel-builds/raw/master/runtime.gz.' + kernelVersion;
 
   /*// Newer versions are stored as GitHub releases
   if (kernelVersion > 3) {

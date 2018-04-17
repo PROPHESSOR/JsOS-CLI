@@ -30,7 +30,7 @@ Commands:
 To setup a project simply clone `JsOS` repository
 
 ```sh
-git clone https://github.com/PROPHESSOR/JsOS
+git clone https://github.com/JsOS-Team/JsOS
 cd JsOS
 npm i
 ```
