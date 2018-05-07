@@ -13,12 +13,12 @@
 // limitations under the License.
 
 'use strict';
-var chalk = require('chalk');
-var shell = require('shelljs');
-var running = [];
+let chalk = require('chalk');
+let shell = require('shelljs');
+let running = [];
 
-process.on('SIGINT', function() {
-  running.forEach(function(p) {
+process.on('SIGINT', function () {
+  running.forEach(function (p) {
     p.kill('SIGINT');
   });
 
@@ -26,20 +26,20 @@ process.on('SIGINT', function() {
   process.exit(0);
 });
 
-function shellexec(cmd, cb) {
-  var p = global.SPAWNED_PROCESS = shell.exec(cmd, { async: true }, function(code, output) {
+module.exports = (cmd, cb) => new Promise((resolve, reject) => {
+  let p = global.SPAWNED_PROCESS = shell.exec(cmd, { async: true }, (code, output) => {
     global.SPAWNED_PROCESS = null;
-    var index = running.indexOf(p);
+    let index = running.indexOf(p);
     if (index > -1) {
       running.splice(index);
     }
 
     if ('function' === typeof cb) {
-      return cb(code, output);
+      cb(code, output);
     }
+
+    return code ? reject(code, output) : resolve(code, output);
   });
 
   running.push(p);
-}
-
-module.exports = shellexec;
+})

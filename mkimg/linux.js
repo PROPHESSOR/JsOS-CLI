@@ -19,28 +19,20 @@ const chalk = require('chalk');
 const exec = require('../run/shell-exec');
 const testCmd = require('../utils/testCmd');
 
-//TODO: patch shell-exec module
-const exe = command => new Promise((resolve, reject)=>{
-  exec(command, (error, output) => {
-    if(error) return reject(error);
-    resolve(output);
-  })
-})
-
 module.exports = (opts, cb) => {
-  const {filename} = opts;
+  const { filename } = opts;
   testCmd('dd', true);
   testCmd('parted', true);
 
   console.log(chalk.cyan('Preparing to create an image...'));
-  exe(`dd if=/dev/zero of=${filename} bs=1M count=32`)
-    .then(() => exe(`parted -s ${filename} mklabel msdos`))
-    .then(() => exe(`parted -s ${filename} mkpart P1 fat32 0 100%`))
+  exec(`dd if=/dev/zero of=${filename} bs=1M count=32`)
+    .then(() => exec(`parted -s ${filename} mklabel msdos`))
+    .then(() => exec(`parted -s ${filename} mkpart P1 fat32 0 100%`))
     .then(() => {
       console.info(chalk.green('The image was created successfully!'))
     })
-    .catch((error) => {
-      console.error(chalk.red(`An error occurred while creating the image: ${error}`))
+    .catch((code, error) => {
+      console.error(chalk.red(`An error occurred while creating the image: [${code || '?'}] ${error || ''}`))
       return cb();
     });
 }
