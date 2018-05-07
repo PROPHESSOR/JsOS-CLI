@@ -1,4 +1,4 @@
-// Copyright 2016-present runtime.js project authors
+// Copyright 2018 JsOS project authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
 
 'use strict';
 
-var mkimg = require('../mkimg');
+const mkimg = require('../mkimg');
 
-const multipliers = {
+/* const multipliers = {
   'B': 0.001,           // byte
   'K': 1,               // kilobyte
   'M': 1000,            // megabyte
@@ -25,32 +25,32 @@ const multipliers = {
   'P': 1000000000000,   // petabyte
   'E': 1000000000000000 // exabyte
 };
-const letterRegex = /[A-Za-z]/;
+const letterRegex = /[A-Za-z]/; */
 
-function toKB(size) {
-  var suffix = size.substr(size.length - 1);
+/* function toKB(size) {
+  let suffix = size.substr(size.length - 1);
   if (!letterRegex.test(suffix)) suffix = 'B';
   return parseInt(size, 10) * multipliers[suffix.toUpperCase()];
-}
+} */
 
 module.exports = function(args, cb) {
   if (args._.length === 0) {
-    args._[0] = 'disk.img';
+    args._[0] = 'jsos-hd0.img';
   }
 
-  var filename = String(args._[0]);
+  let filename = String(args._[0]);
 
-  var size = String(args.size);
-  var sizeInKb = toKB(size);
+  /* let size = String(args.size);
+  let sizeInKb = toKB(size);
   if (sizeInKb < 33792) {
     return cb('invalid size for FAT32. minimum limit of 33792 kb (~33 mb)');
-  }
+  } */
 
-  var label = String(args.label).toUpperCase(); // valid names for FAT volumes are upper case
+  // let label = String(args.label).toUpperCase(); // valid names for FAT volumes are upper case
 
   mkimg({
-    size: size,
-    filename: filename,
-    label: label
+    // size: size,
+    filename: filename
+    // label: label
   }, cb);
 };

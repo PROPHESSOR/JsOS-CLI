@@ -1,4 +1,4 @@
-// Copyright 2016-present runtime.js project authors
+// Copyright 2018 JsOS project authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,21 +14,33 @@
 
 'use strict';
 
-var exec = require('../run/shell-exec');
-var testCmd = require('../utils/testCmd');
+const chalk = require('chalk');
 
-module.exports = function(opts, cb) {
-  testCmd('losetup', true);
-  testCmd('mkfs.msdos', false);
+const exec = require('../run/shell-exec');
+const testCmd = require('../utils/testCmd');
 
-  exec('losetup -f', function(code, output) {
-    var mountpoint = output.trim();
-    exec('losetup ' + mountpoint + ' ' + opts.filename, function(code, output) {
-      exec('mkfs.msdos -F 32 -n "' + opts.label + '" ' + mountpoint, function(code, output) {
-        exec('losetup -d ' + mountpoint, function(code, output) {
-          cb();
-        });
-      });
+//TODO: patch shell-exec module
+const exe = command => new Promise((resolve, reject)=>{
+  exec(command, (error, output) => {
+    if(error) return reject(error);
+    resolve(output);
+  })
+})
+
+module.exports = (opts, cb) => {
+  const {filename} = opts;
+  testCmd('dd', true);
+  testCmd('parted', true);
+
+  console.log(chalk.cyan('Preparing to create an image...'));
+  exe(`dd if=/dev/zero of=${filename} bs=1M count=32`)
+    .then(() => exe(`parted -s ${filename} mklabel msdos`))
+    .then(() => exe(`parted -s ${filename} mkpart P1 fat32 0 100%`))
+    .then(() => {
+      console.info(chalk.green('The image was created successfully!'))
+    })
+    .catch((error) => {
+      console.error(chalk.red(`An error occurred while creating the image: ${error}`))
+      return cb();
     });
-  });
-};
+}

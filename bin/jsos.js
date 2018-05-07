@@ -218,11 +218,11 @@ var cmds = [{
   }
 }, {
   name: 'mkimg',
-  description: 'Easily create a disk image for use with runtime.js',
+  description: 'Easily create a disk image for use in JsOS',
   args: mkimgArgs,
   mainArg: {
     name: 'filename',
-    description: 'The filename for the newly created disk image including the extension,\ndefaults to "disk.img"'
+    description: 'The filename for the newly created disk image including the extension,\ndefaults to "jsos-hd0.img"'
   }
 }, {
   name: 'mkiso',
