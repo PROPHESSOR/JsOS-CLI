@@ -1,9 +1,3 @@
-extends:
-  - runtime
-
-plugins:
-  - runtime-internal
-
 env:
   es6: true
   node: true
@@ -15,7 +9,6 @@ rules:
     - 'global'
 
   code: 100
-  tabWidth: 2
   ignoreComments: true
   ignoreUrls: true
   consistent-return: 0
