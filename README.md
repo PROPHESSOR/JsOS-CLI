@@ -1,7 +1,7 @@
 # JsOS-CLI
 Command line tools for `JsOS`.
 
-[![npm](https://static.npmjs.com/images/logo.svg | width=64)](https://www.npmjs.com/package/jsos-cli)
+<a href="https://www.npmjs.com/package/jsos-cli"><img src="https://static.npmjs.com/images/logo.svg" width="64"/></a>
 
 ## Installation
 
