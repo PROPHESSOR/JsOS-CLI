@@ -19,7 +19,7 @@ var shell = require('shelljs');
 var exec = require('../run/shell-exec');
 var testCmd = require('../utils/testCmd');
 
-module.exports = function(opts, cb) {
+module.exports = function (opts, cb) {
   var helper;
   if (process.platform === 'darwin') {
     helper = require('./macos');
@@ -31,13 +31,8 @@ module.exports = function(opts, cb) {
     return cb('unknown/unsupported platform');
   }
 
-  testCmd('qemu-img', false);
-
   shell.echo(chalk.yellow('warning: it may appear that the process has frozen when creating large disk images'));
   shell.echo(chalk.green(' --- creating image --- '));
 
-  exec('qemu-img create ' + opts.filename + ' ' + opts.size, function(code, output) {
-    shell.echo(chalk.green(' --- formatting image --- '));
-    helper(opts, cb);
-  });
+  helper(opts, cb);
 };

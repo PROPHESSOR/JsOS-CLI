@@ -21,7 +21,8 @@ var chalk = require('chalk');
 var tabtab = require('tabtab');
 var version = require('../package.json').version;
 
-var packArgs = [{
+var packArgs = [
+  {
     name: 'list-files',
     type: 'boolean',
     default: false,
@@ -53,7 +54,8 @@ var packArgs = [{
   }
 ];
 
-var runArgs = [{
+var runArgs = [
+  {
     name: 'net',
     type: 'string',
     default: 'user',
@@ -157,21 +159,23 @@ var runArgs = [{
   }
 ];
 
-var mkimgArgs = [{
-    name: 'size',
+var mkimgArgs = [
+  {
+    name: 'filename',
     type: 'string',
-    default: '1G',
-    description: 'Size of the new image, defaults to 1 gigabyte. See `qemu-img --help` for sizes.\nMust be >= 33792 kb (33 mb)'
+    default: 'jsos-hd0.img',
+    description: 'The filename for the newly created disk image including the extension,\ndefaults to "jsos-hd0.img"'
   },
   {
-    name: 'label',
-    type: 'string',
-    default: 'RUNTIMEJS',
-    description: 'Label of the new image, defaults to "RUNTIMEJS"'
+    name: 'size',
+    type: 'number',
+    default: 32,
+    description: 'The size for the newly created disk image in Megabytes\ndefaults to 32'
   }
 ];
 
-var mkisoArgs = [{
+var mkisoArgs = [
+  {
     name: 'kernel',
     type: 'string',
     default: 'kernel',
@@ -185,50 +189,47 @@ var mkisoArgs = [{
   }
 ];
 
-var cmds = [{
-  name: 'start',
-  description: 'Quickly start runtime.js VM using current directory',
-  args: runArgs.concat(packArgs)
-}, {
-  name: 'watch',
-  description: 'Watch current directory and automatically restart runtime.js VM',
-  args: runArgs.concat(packArgs)
-}, {
-  name: 'pack',
-  description: 'Package specified directory into ramdisk bundle',
-  args: packArgs,
-  mainArg: {
-    name: 'directory',
-    description: 'Directory to package'
-  }
-}, {
-  name: 'run',
-  description: 'Run runtime.js VM using specified ramdisk bundle',
-  args: runArgs,
-  mainArg: {
-    name: 'ramdisk',
-    description: 'Ramdisk/initrd bundle file to use'
-  }
-}, {
-  name: 'show',
-  description: 'Print VM output or log',
-  mainArg: {
-    name: 'type',
-    description: 'VM output file to print, can be "log" or "netdump",\ndefaults to "log"'
-  }
-}, {
-  name: 'mkimg',
-  description: 'Easily create a disk image for use in JsOS',
-  args: mkimgArgs,
-  mainArg: {
-    name: 'filename',
-    description: 'The filename for the newly created disk image including the extension,\ndefaults to "jsos-hd0.img"'
-  }
-}, {
-  name: 'mkiso',
-  description: 'Build the JsOS ISO file',
-  args: mkisoArgs,
-  mainArg: [{
+var cmds = [
+  {
+    name: 'start',
+    description: 'Quickly start runtime.js VM using current directory',
+    args: runArgs.concat(packArgs)
+  }, {
+    name: 'watch',
+    description: 'Watch current directory and automatically restart runtime.js VM',
+    args: runArgs.concat(packArgs)
+  }, {
+    name: 'pack',
+    description: 'Package specified directory into ramdisk bundle',
+    args: packArgs,
+    mainArg: {
+      name: 'directory',
+      description: 'Directory to package'
+    }
+  }, {
+    name: 'run',
+    description: 'Run runtime.js VM using specified ramdisk bundle',
+    args: runArgs,
+    mainArg: {
+      name: 'ramdisk',
+      description: 'Ramdisk/initrd bundle file to use'
+    }
+  }, {
+    name: 'show',
+    description: 'Print VM output or log',
+    mainArg: {
+      name: 'type',
+      description: 'VM output file to print, can be "log" or "netdump",\ndefaults to "log"'
+    }
+  }, {
+    name: 'mkimg',
+    description: 'Easily create a disk image for use in JsOS',
+    args: mkimgArgs
+  }, {
+    name: 'mkiso',
+    description: 'Build the JsOS ISO file',
+    args: mkisoArgs,
+    mainArg: [{
       name: 'filename',
       description: 'The filename for the newly created disk image including the extension,\ndefaults to "JsOS.iso"'
     },
@@ -238,19 +239,19 @@ var cmds = [{
       default: 'disk',
       description: 'Forlder of the kernel, initrd and grub config files. \nDefaults to "disk"\nIf folder isn\'t exist, it will be created.'
     },
-  ]
-}, {
-  name: 'depack',
-  description: 'Depack the initrd file',
-  args: [],
-  mainArg: {
-    name: 'filename',
-    description: 'The filename for the depack,\ndefaults to ".initrd"'
-  }
-}, {
-  name: 'help',
-  description: 'Print this usage help'
-}];
+    ]
+  }, {
+    name: 'depack',
+    description: 'Depack the initrd file',
+    args: [],
+    mainArg: {
+      name: 'filename',
+      description: 'The filename for the depack,\ndefaults to ".initrd"'
+    }
+  }, {
+    name: 'help',
+    description: 'Print this usage help'
+  }];
 
 function help() {
   console.log('USAGE: jsos <command> [<args>]');

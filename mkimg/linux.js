@@ -20,12 +20,13 @@ const exec = require('../run/shell-exec');
 const testCmd = require('../utils/testCmd');
 
 module.exports = (opts, cb) => {
-  const { filename } = opts;
+  const { filename, size } = opts;
   testCmd('dd', true);
   testCmd('parted', true);
 
   console.log(chalk.cyan('Preparing to create an image...'));
-  exec(`dd if=/dev/zero of=${filename} bs=1M count=32`)
+  console.info(chalk.cyan(`Creating the disk image ${filename} (${size}Mb)`))
+  exec(`dd if=/dev/zero of=${filename} bs=1M count=${size}`)
     .then(() => exec(`parted -s ${filename} mklabel msdos`))
     .then(() => exec(`parted -s ${filename} mkpart primary fat32 0 100%`))
     .then(() => {

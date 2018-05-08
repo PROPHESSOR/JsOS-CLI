@@ -40,17 +40,17 @@ module.exports = function(args, cb) {
 
   let filename = String(args._[0]);
 
-  /* let size = String(args.size);
-  let sizeInKb = toKB(size);
-  if (sizeInKb < 33792) {
-    return cb('invalid size for FAT32. minimum limit of 33792 kb (~33 mb)');
-  } */
+  let size = args.size || 32;
+  // let sizeInKb = toKB(size);
+  // if (sizeInKb < 33792) {
+  //   return cb('invalid size for FAT32. minimum limit of 33792 kb (~33 mb)');
+  // }
 
   // let label = String(args.label).toUpperCase(); // valid names for FAT volumes are upper case
 
   mkimg({
-    // size: size,
-    filename: filename
-    // label: label
+    size,
+    filename
+    // label
   }, cb);
 };
