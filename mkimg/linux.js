@@ -27,7 +27,7 @@ module.exports = (opts, cb) => {
   console.log(chalk.cyan('Preparing to create an image...'));
   exec(`dd if=/dev/zero of=${filename} bs=1M count=32`)
     .then(() => exec(`parted -s ${filename} mklabel msdos`))
-    .then(() => exec(`parted -s ${filename} mkpart P1 fat32 0 100%`))
+    .then(() => exec(`parted -s ${filename} mkpart primary fat32 0 100%`))
     .then(() => {
       console.info(chalk.green('The image was created successfully!'))
     })
