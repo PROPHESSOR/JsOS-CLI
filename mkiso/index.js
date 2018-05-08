@@ -14,30 +14,30 @@
 
 'use strict';
 
-var chalk = require('chalk');
-var shell = require('shelljs');
-var exec = require('../run/shell-exec');
-var testCmd = require('../utils/testCmd');
+const chalk = require('chalk');
+const shell = require('shelljs');
+const exec = require('../run/shell-exec');
+const testCmd = require('../utils/testCmd');
 
 module.exports = function (opts, cb) {
-    var helper;
-    if (process.platform === 'darwin') {
-        // helper = require('./macos');
-        return cb('MacOS isn\'t supported platform');
-    } else if (process.platform === 'win32') {
-        // helper = require('./windows');
-        return cb('Windows isn\'t supported platform');
-    } else if (process.platform === 'linux') {
-        helper = require('./linux');
-    } else {
-        return cb('unknown/unsupported platform');
-    }
+  let helper;
+  if (process.platform === 'darwin') {
+    // helper = require('./macos');
+    return cb('MacOS isn\'t supported platform');
+  } else if (process.platform === 'win32') {
+    // helper = require('./windows');
+    return cb('Windows isn\'t supported platform');
+  } else if (process.platform === 'linux') {
+    helper = require('./linux');
+  } else {
+    return cb('unknown/unsupported platform');
+  }
 
-    // testCmd('qemu-img', false);
+  // testCmd('qemu-img', false);
 
-    //   shell.echo(chalk.yellow('warning: it may appear that the process has frozen when creating large disk images'));
-    shell.echo(chalk.yellow('Let\'s start to create the ISO image =)'));
-    shell.echo(chalk.green(' --- creating image --- '));
+  //   shell.echo(chalk.yellow('warning: it may appear that the process has frozen when creating large disk images'));
+  shell.echo(chalk.yellow('Let\'s start to create the ISO image =)'));
+  shell.echo(chalk.green(' --- creating image --- '));
 
-    helper(opts, cb);
+  helper(opts, cb);
 };

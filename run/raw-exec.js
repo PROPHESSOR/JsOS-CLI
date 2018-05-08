@@ -13,17 +13,18 @@
 // limitations under the License.
 
 'use strict';
-var childProcess = require('child_process');
+
+const childProcess = require('child_process');
 
 function exec(cmd, args, cb) {
   cb = cb || function() {};
-  var p = global.SPAWNED_PROCESS = childProcess.spawn(cmd, args, {
-    stdio: 'inherit',
-    customFds: [process.stdin, process.stdout, process.stderr]
+  const p = global.SPAWNED_PROCESS = childProcess.spawn(cmd, args, {
+    "stdio": 'inherit',
+    "customFds": [process.stdin, process.stdout, process.stderr]
   });
 
   process.stdin.setRawMode(true);
-  p.on('exit', function(code) {
+  p.on('exit', (code) => {
     process.stdin.setRawMode(false);
     global.SPAWNED_PROCESS = null;
     if ('function' === typeof cb) {

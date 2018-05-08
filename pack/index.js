@@ -14,14 +14,15 @@
 // limitations under the License.
 
 'use strict';
-var recursive = require('./recursive');
-var initrdPack = require('./initrd-pack');
-var pathUtils = require('path');
-var fs = require('fs');
-var dotFileRegex = /^\./;
+
+const recursive = require('./recursive');
+const initrdPack = require('./initrd-pack');
+const pathUtils = require('path');
+const fs = require('fs');
+const dotFileRegex = /^\./;
 
 function parseCoreConfig(path) {
-  var fileData = null;
+  let fileData = null;
   try {
     fileData = JSON.parse(fs.readFileSync(path));
   } catch (e) {}
@@ -47,23 +48,23 @@ function pathNameFormat(path) {
  * @param {function} cb Callback
  */
 module.exports = function(opts, cb) {
-  var output = opts.output || '.initrd';
-  var coreConfig = null;
-  var indexPath = '';
-  var indexName = '';
-  var appIndexName = opts.entry || '/';
-  var isRecursiveErrored = false;
+  const output = opts.output || '.initrd';
+  let coreConfig = null;
+  let indexPath = '';
+  let indexName = '';
+  const appIndexName = opts.entry || '/';
+  let isRecursiveErrored = false;
 
-  var files = [];
+  let files = [];
 
-  opts.dirs.forEach(function(d) {
+  opts.dirs.forEach((d) => {
     if (isRecursiveErrored) {
       return;
     }
 
-    var f = [];
+    let f = [];
     if (opts.verbose) {
-      process.stdout.write('Adding directory "' + d.dir + '" (at "' + d.packagePath + '")... ');
+      process.stdout.write(`Adding directory "${d.dir}" (at "${d.packagePath}")... `);
     }
 
     try {
@@ -75,42 +76,40 @@ module.exports = function(opts, cb) {
     }
 
     if (opts.verbose) {
-      console.log(f.length + ' files')
+      console.log(`${f.length} files`)
     }
 
-    files = files.concat(f.map(function(fl) {
-      return {
-        path: fl,
-        dir: d.dir,
-        packagePath: d.packagePath
-      };
-    }));
+    files = files.concat(f.map((fl) => ({
+      "path": fl,
+      "dir": d.dir,
+      "packagePath": d.packagePath
+    })));
   });
 
   if (isRecursiveErrored) {
     return;
   }
 
-  var filesError = null;
-  var foundLibPath = '';
+  let filesError = null;
+  let foundLibPath = '';
 
-  var bundle = files.map(function(fileData) {
-    var packagePath = fileData.packagePath;
-    var path = fileData.path;
-    var baseName = pathUtils.basename(path);
+  const bundle = files.map((fileData) => {
+    const packagePath = fileData.packagePath;
+    const path = fileData.path;
+    const baseName = pathUtils.basename(path);
     if (dotFileRegex.test(baseName)) {
       return null;
     }
 
     if (baseName === 'runtimecorelib.json') {
       if (coreConfig) {
-        filesError = 'found two copies of the runtime.js library at "' + foundLibPath + '" and "' + pathUtils.dirname(path) + '"';
+        filesError = `found two copies of the runtime.js library at "${foundLibPath}" and "${pathUtils.dirname(path)}"`;
         return null;
       }
 
       coreConfig = parseCoreConfig(path);
       if (!coreConfig || !coreConfig.kernelVersion) {
-        filesError = 'unable to read runtime.js library config "' + path + '"';
+        filesError = `unable to read runtime.js library config "${path}"`;
         return null;
       }
 
@@ -120,20 +119,20 @@ module.exports = function(opts, cb) {
         indexName = opts.systemEntry;
       } else {
         indexPath = pathUtils.resolve(pathUtils.dirname(path), 'js', '__loader.js');
-        indexName = packagePath + '/' + pathNameFormat(pathUtils.relative(fileData.dir, indexPath));
+        indexName = `${packagePath}/${pathNameFormat(pathUtils.relative(fileData.dir, indexPath))}`;
       }
 
       if (opts.verbose) {
-        console.log('System entry point "' + indexName + '"');
+        console.log(`System entry point "${indexName}"`);
       }
     }
 
-    var relativePath = pathUtils.relative(fileData.dir, path);
+    const relativePath = pathUtils.relative(fileData.dir, path);
 
     return {
-      path: path,
-      relativePath: relativePath,
-      name: packagePath + '/' + pathNameFormat(relativePath)
+      "path": path,
+      "relativePath": relativePath,
+      "name": `${packagePath}/${pathNameFormat(relativePath)}`
     }
   }).filter(Boolean);
 
@@ -143,7 +142,7 @@ module.exports = function(opts, cb) {
   }
 
   if (opts.listFiles) {
-    bundle.forEach(function(f) {
+    bundle.forEach((f) => {
       console.log(f.relativePath);
     });
     cb(null);
@@ -155,12 +154,12 @@ module.exports = function(opts, cb) {
     return;
   }
 
-  var out = fs.createWriteStream(pathUtils.resolve(output));
-  out.once('finish', function() {
+  const out = fs.createWriteStream(pathUtils.resolve(output));
+  out.once('finish', () => {
     cb(null, {
-      bundle: bundle,
-      indexName: indexName,
-      appIndexName: appIndexName
+      "bundle": bundle,
+      "indexName": indexName,
+      "appIndexName": appIndexName
     });
   });
   out.once('error', cb);

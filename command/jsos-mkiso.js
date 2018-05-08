@@ -14,7 +14,7 @@
 
 'use strict';
 
-var mkiso = require('../mkiso');
+const mkiso = require('../mkiso');
 
 const multipliers = {
   'B': 0.001,           // byte
@@ -28,7 +28,7 @@ const multipliers = {
 const letterRegex = /[A-Za-z]/;
 
 function toKB(size) {
-  var suffix = size.substr(size.length - 1);
+  let suffix = size.substr(size.length - 1);
   if (!letterRegex.test(suffix)) suffix = 'B';
   return parseInt(size, 10) * multipliers[suffix.toUpperCase()];
 }
@@ -43,13 +43,13 @@ module.exports = function(args, cb) {
   const foldername = String(args._[1]);
   const kernel = args.kernel;
   const initrd = args.initrd;
-//   var size = String(args.size);
-//   var sizeInKb = toKB(size);
-//   if (sizeInKb < 33792) {
-//     return cb('invalid size for FAT32. minimum limit of 33792 kb (~33 mb)');
-//   }
+  //   var size = String(args.size);
+  //   var sizeInKb = toKB(size);
+  //   if (sizeInKb < 33792) {
+  //     return cb('invalid size for FAT32. minimum limit of 33792 kb (~33 mb)');
+  //   }
 
-//   var label = String(args.label).toUpperCase(); // valid names for FAT volumes are upper case
+  //   var label = String(args.label).toUpperCase(); // valid names for FAT volumes are upper case
 
   mkiso({
     // size: size,

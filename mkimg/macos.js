@@ -14,17 +14,17 @@
 
 'use strict';
 
-var exec = require('../run/shell-exec');
-var testCmd = require('../utils/testCmd');
+const exec = require('../run/shell-exec');
+const testCmd = require('../utils/testCmd');
 
 module.exports = function(opts, cb) {
   testCmd('hdiutil', true);
   testCmd('diskutil', true);
 
-  exec('hdiutil attach ' + opts.filename + ' -nomount', function(code, output) {
-    var mountpoint = output.trim();
-    exec('diskutil eraseVolume fat32 "' + opts.label + '" ' + mountpoint, function(code, output) {
-      exec('hdiutil detach ' + mountpoint, function(code, output) {
+  exec(`hdiutil attach ${opts.filename} -nomount`, (code, output) => {
+    const mountpoint = output.trim();
+    exec(`diskutil eraseVolume fat32 "${opts.label}" ${mountpoint}`, (code, output) => {
+      exec(`hdiutil detach ${mountpoint}`, (code, output) => {
         cb();
       });
     });

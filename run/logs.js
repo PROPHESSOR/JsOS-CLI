@@ -13,7 +13,8 @@
 // limitations under the License.
 
 'use strict';
-var path = require('path');
+
+const path = require('path');
 
 exports.logPath = path.resolve(__dirname, 'runtime.log');
 exports.netdumpPath = path.resolve(__dirname, 'netdump.pcap');

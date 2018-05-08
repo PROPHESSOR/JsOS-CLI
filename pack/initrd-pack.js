@@ -13,15 +13,16 @@
 // limitations under the License.
 
 'use strict';
-var fs = require('fs');
-var crc32 = require('buffer-crc32');
-var nullByte = new Buffer([0]);
-var zlib = require('zlib');
-var crypto = require('crypto');
+
+const fs = require('fs');
+const crc32 = require('buffer-crc32');
+const nullByte = new Buffer([0]);
+const zlib = require('zlib');
+const crypto = require('crypto');
 
 function writeString(stream, str) {
-  var strBuf = new Buffer(str, 'utf8');
-  var strLenBuf = new Buffer(2);
+  const strBuf = new Buffer(str, 'utf8');
+  const strLenBuf = new Buffer(2);
   strLenBuf.writeUInt16BE(strBuf.length, 0);
   stream.write(strLenBuf);
   stream.write(strBuf);
@@ -30,13 +31,13 @@ function writeString(stream, str) {
 }
 
 function hashBuffer(buf) {
-  var hash = crypto.createHash('sha256');
+  const hash = crypto.createHash('sha256');
   hash.update(buf, 'binary');
   return hash.digest('hex');
 }
 
 module.exports = function(out, files, coreConfig, runtimeIndexName, appIndexName) {
-  var headerBuffer = new Buffer(24);
+  const headerBuffer = new Buffer(24);
   headerBuffer.writeUInt32BE(0xCAFECAFE, 0);
   headerBuffer.writeUInt8('P'.charCodeAt(0), 4);
   headerBuffer.writeUInt8('C'.charCodeAt(0), 5);
@@ -44,27 +45,27 @@ module.exports = function(out, files, coreConfig, runtimeIndexName, appIndexName
   headerBuffer.writeUInt8('G'.charCodeAt(0), 7);
   headerBuffer.writeUInt32BE(0, 8); // backwards compatible file count 0
 
-  var kernelVer = Number(coreConfig.kernelVersion);
+  const kernelVer = Number(coreConfig.kernelVersion);
   headerBuffer.writeUInt32BE(kernelVer, 12);
   headerBuffer.writeUInt32BE(files.length, 16);
 
-  var def = zlib.createDeflate({
-    level: 6
+  const def = zlib.createDeflate({
+    "level": 6
   });
 
-  var inflatedSize = 0;
+  let inflatedSize = 0;
   inflatedSize += writeString(def, runtimeIndexName);
   inflatedSize += writeString(def, appIndexName);
 
-  var hashes = {};
+  const hashes = {};
 
-  for (var i = 0; i < files.length; ++i) {
-    var file = files[i];
-    var fileBuffer = fs.readFileSync(file.path);
-    var hashValue = hashBuffer(fileBuffer);
-    var isLink = typeof hashes[hashValue] === 'number';
+  for (let i = 0; i < files.length; ++i) {
+    const file = files[i];
+    const fileBuffer = fs.readFileSync(file.path);
+    const hashValue = hashBuffer(fileBuffer);
+    const isLink = typeof hashes[hashValue] === 'number';
 
-    var fileHeaderBuf = new Buffer(8);
+    const fileHeaderBuf = new Buffer(8);
     fileHeaderBuf.writeUInt32BE(isLink ? 0xBB : 0xAA, 0);
     fileHeaderBuf.writeUInt32BE(fileBuffer.length, 4); // length
     inflatedSize += fileHeaderBuf.length;
@@ -74,13 +75,13 @@ module.exports = function(out, files, coreConfig, runtimeIndexName, appIndexName
 
     if (isLink) {
       // link to another file by index
-      var indexBuf = new Buffer(4);
+      const indexBuf = new Buffer(4);
       indexBuf.writeUInt32BE(hashes[hashValue], 0);
       def.write(indexBuf);
       inflatedSize += indexBuf.length;
     } else {
       // normal file content
-      var crc = crc32(fileBuffer);
+      const crc = crc32(fileBuffer);
       def.write(crc);
       def.write(fileBuffer);
       inflatedSize += crc.length + fileBuffer.length;

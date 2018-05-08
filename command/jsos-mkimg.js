@@ -38,9 +38,9 @@ module.exports = function(args, cb) {
     args._[0] = 'jsos-hd0.img';
   }
 
-  let filename = String(args._[0]);
+  const filename = String(args._[0]);
 
-  let size = args.size || 32;
+  const size = args.size || 32;
   // let sizeInKb = toKB(size);
   // if (sizeInKb < 33792) {
   //   return cb('invalid size for FAT32. minimum limit of 33792 kb (~33 mb)');

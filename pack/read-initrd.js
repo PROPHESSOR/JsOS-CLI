@@ -14,14 +14,14 @@
 
 'use strict';
 
-var fs = require('fs');
+const fs = require('fs');
 
 module.exports = function(filename) {
-  var buf = new Buffer(16);
+  const buf = new Buffer(16);
 
   try {
-    var fd = fs.openSync(filename, 'r');
-    var bytesRead = fs.readSync(fd, buf, 0, 16, 0);
+    const fd = fs.openSync(filename, 'r');
+    const bytesRead = fs.readSync(fd, buf, 0, 16, 0);
     if (bytesRead !== 16) {
       return null;
     }
@@ -44,9 +44,9 @@ module.exports = function(filename) {
     return null;
   }
 
-  var kernelVer = buf.readUInt32BE(12);
+  const kernelVer = buf.readUInt32BE(12);
 
   return {
-    kernelVer: kernelVer
+    "kernelVer": kernelVer
   };
 };

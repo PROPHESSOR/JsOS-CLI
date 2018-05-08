@@ -13,7 +13,8 @@
 // limitations under the License.
 
 'use strict';
-var getPrebuilt = require('./get-prebuilt');
+
+const getPrebuilt = require('./get-prebuilt');
 
 module.exports = function(kernelVer, kernelFile, shouldBeLocal, cb) {
   if (!kernelFile) {

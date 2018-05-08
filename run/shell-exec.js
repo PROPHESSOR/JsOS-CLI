@@ -13,12 +13,13 @@
 // limitations under the License.
 
 'use strict';
-let chalk = require('chalk');
-let shell = require('shelljs');
-let running = [];
 
-process.on('SIGINT', function () {
-  running.forEach(function (p) {
+const chalk = require('chalk');
+const shell = require('shelljs');
+const running = [];
+
+process.on('SIGINT', () => {
+  running.forEach((p) => {
     p.kill('SIGINT');
   });
 
@@ -27,9 +28,9 @@ process.on('SIGINT', function () {
 });
 
 module.exports = (cmd, cb) => new Promise((resolve, reject) => {
-  let p = global.SPAWNED_PROCESS = shell.exec(cmd, { async: true }, (code, output) => {
+  const p = global.SPAWNED_PROCESS = shell.exec(cmd, { "async": true }, (code, output) => {
     global.SPAWNED_PROCESS = null;
-    let index = running.indexOf(p);
+    const index = running.indexOf(p);
     if (index > -1) {
       running.splice(index);
     }

@@ -13,13 +13,14 @@
 // limitations under the License.
 
 'use strict';
-var test = require('tape');
-var mock = require('mock-fs');
-var fs = require('fs');
-var createPackage = require('../pack');
-var readInitrd = require('../pack/read-initrd');
 
-test('package directory', function(t) {
+const test = require('tape');
+const mock = require('mock-fs');
+const fs = require('fs');
+const createPackage = require('../pack');
+const readInitrd = require('../pack/read-initrd');
+
+test('package directory', (t) => {
   mock({
     '/home/user/mydir': {
       'index.js': 'console.log("OK")',
@@ -36,42 +37,44 @@ test('package directory', function(t) {
     }
   });
 
-  t.throws(function() {
+  t.throws(() => {
     fs.statSync('/home/user/.initrd');
   }, /no such file or directory/, 'initrd does not exist');
 
   createPackage({
-    dir: '/home/user/mydir',
-    dirs: [{
-      dir: '/home/user/mydir',
-      packagePath: ''
-    }],
-    output: '/home/user/.initrd'
-  }, function(err, data) {
+    "dir": '/home/user/mydir',
+    "dirs": [
+      {
+        "dir": '/home/user/mydir',
+        "packagePath": ''
+      }
+    ],
+    "output": '/home/user/.initrd'
+  }, (err, data) => {
     t.error(err, 'no error');
-    t.doesNotThrow(function() {
+    t.doesNotThrow(() => {
       fs.statSync('/home/user/.initrd');
     }, 'initrd has been created');
 
-    var initrdData = readInitrd('/home/user/.initrd');
-    t.same(initrdData, { kernelVer: 1 }, 'initrd has valid format')
+    const initrdData = readInitrd('/home/user/.initrd');
+    t.same(initrdData, { "kernelVer": 1 }, 'initrd has valid format')
 
     t.same(data.bundle, [
-      { path: '/home/user/mydir/index.js',
-        relativePath: 'index.js',
-        name: '/index.js' },
-      { path: '/home/user/mydir/node_modules/module1/index.js',
-        relativePath: 'node_modules/module1/index.js',
-        name: '/node_modules/module1/index.js' },
-      { path: '/home/user/mydir/node_modules/module1/package.json',
-        relativePath: 'node_modules/module1/package.json',
-        name: '/node_modules/module1/package.json' },
-      { path: '/home/user/mydir/node_modules/runtimejs/runtimecorelib.json',
-        relativePath: 'node_modules/runtimejs/runtimecorelib.json',
-        name: '/node_modules/runtimejs/runtimecorelib.json' },
-      { path: '/home/user/mydir/other-file.js',
-        relativePath: 'other-file.js',
-        name: '/other-file.js' }
+      { "path": '/home/user/mydir/index.js',
+        "relativePath": 'index.js',
+        "name": '/index.js' },
+      { "path": '/home/user/mydir/node_modules/module1/index.js',
+        "relativePath": 'node_modules/module1/index.js',
+        "name": '/node_modules/module1/index.js' },
+      { "path": '/home/user/mydir/node_modules/module1/package.json',
+        "relativePath": 'node_modules/module1/package.json',
+        "name": '/node_modules/module1/package.json' },
+      { "path": '/home/user/mydir/node_modules/runtimejs/runtimecorelib.json',
+        "relativePath": 'node_modules/runtimejs/runtimecorelib.json',
+        "name": '/node_modules/runtimejs/runtimecorelib.json' },
+      { "path": '/home/user/mydir/other-file.js',
+        "relativePath": 'other-file.js',
+        "name": '/other-file.js' }
     ], 'bundle files');
 
     t.is(data.indexName, '/node_modules/runtimejs/js/__loader.js');
@@ -82,7 +85,7 @@ test('package directory', function(t) {
   });
 });
 
-test('package two directories', function(t) {
+test('package two directories', (t) => {
   mock({
     '/home/user/mydir': {
       'index.js': 'console.log("OK")',
@@ -107,51 +110,53 @@ test('package two directories', function(t) {
     }
   });
 
-  t.throws(function() {
+  t.throws(() => {
     fs.statSync('/home/user/.initrd');
   }, /no such file or directory/, 'initrd does not exist');
 
   createPackage({
-    dir: '/home/user/mydir',
-    dirs: [{
-      dir: '/home/user/mydir',
-      packagePath: ''
-    }, {
-      dir: '/other-dir',
-      packagePath: '/abc'
-    }],
-    output: '/home/user/.initrd'
-  }, function(err, data) {
+    "dir": '/home/user/mydir',
+    "dirs": [
+      {
+        "dir": '/home/user/mydir',
+        "packagePath": ''
+      }, {
+        "dir": '/other-dir',
+        "packagePath": '/abc'
+      }
+    ],
+    "output": '/home/user/.initrd'
+  }, (err, data) => {
     t.error(err, 'no error');
-    t.doesNotThrow(function() {
+    t.doesNotThrow(() => {
       fs.statSync('/home/user/.initrd');
     }, 'initrd has been created');
 
-    var initrdData = readInitrd('/home/user/.initrd');
-    t.same(initrdData, { kernelVer: 1 }, 'initrd has valid format')
+    const initrdData = readInitrd('/home/user/.initrd');
+    t.same(initrdData, { "kernelVer": 1 }, 'initrd has valid format')
 
     t.same(data.bundle, [
-      { path: '/home/user/mydir/index.js',
-        relativePath: 'index.js',
-        name: '/index.js' },
-      { path: '/home/user/mydir/node_modules/module1/index.js',
-        relativePath: 'node_modules/module1/index.js',
-        name: '/node_modules/module1/index.js' },
-      { path: '/home/user/mydir/node_modules/module1/package.json',
-        relativePath: 'node_modules/module1/package.json',
-        name: '/node_modules/module1/package.json' },
-      { path: '/home/user/mydir/node_modules/runtimejs/runtimecorelib.json',
-        relativePath: 'node_modules/runtimejs/runtimecorelib.json',
-        name: '/node_modules/runtimejs/runtimecorelib.json' },
-      { path: '/home/user/mydir/other-file.js',
-        relativePath: 'other-file.js',
-        name: '/other-file.js' },
-      { path: '/other-dir/entry.js',
-        relativePath: 'entry.js',
-        name: '/abc/entry.js' },
-      { path: '/other-dir/subdir/other-subdir/f.js',
-        relativePath: 'subdir/other-subdir/f.js',
-        name: '/abc/subdir/other-subdir/f.js' }
+      { "path": '/home/user/mydir/index.js',
+        "relativePath": 'index.js',
+        "name": '/index.js' },
+      { "path": '/home/user/mydir/node_modules/module1/index.js',
+        "relativePath": 'node_modules/module1/index.js',
+        "name": '/node_modules/module1/index.js' },
+      { "path": '/home/user/mydir/node_modules/module1/package.json',
+        "relativePath": 'node_modules/module1/package.json',
+        "name": '/node_modules/module1/package.json' },
+      { "path": '/home/user/mydir/node_modules/runtimejs/runtimecorelib.json',
+        "relativePath": 'node_modules/runtimejs/runtimecorelib.json',
+        "name": '/node_modules/runtimejs/runtimecorelib.json' },
+      { "path": '/home/user/mydir/other-file.js',
+        "relativePath": 'other-file.js',
+        "name": '/other-file.js' },
+      { "path": '/other-dir/entry.js',
+        "relativePath": 'entry.js',
+        "name": '/abc/entry.js' },
+      { "path": '/other-dir/subdir/other-subdir/f.js',
+        "relativePath": 'subdir/other-subdir/f.js',
+        "name": '/abc/subdir/other-subdir/f.js' }
     ], 'bundle files');
 
     t.is(data.indexName, '/node_modules/runtimejs/js/__loader.js');
@@ -162,7 +167,7 @@ test('package two directories', function(t) {
   });
 });
 
-test('package multiple directories', function(t) {
+test('package multiple directories', (t) => {
   mock({
     '/home/user/mydir': {
       'index.js': 'console.log("OK")',
@@ -204,64 +209,66 @@ test('package multiple directories', function(t) {
   });
 
   createPackage({
-    dir: '/home/user/mydir',
-    dirs: [{
-      dir: '/home/user/mydir',
-      packagePath: ''
-    }, {
-      dir: '/other-dir',
-      packagePath: '/abc'
-    }, {
-      dir: '/other-dir2',
-      packagePath: '/abc/inner'
-    }, {
-      dir: '/other-dir3',
-      packagePath: '/def'
-    }],
-    output: '/home/user/.initrd'
-  }, function(err, data) {
+    "dir": '/home/user/mydir',
+    "dirs": [
+      {
+        "dir": '/home/user/mydir',
+        "packagePath": ''
+      }, {
+        "dir": '/other-dir',
+        "packagePath": '/abc'
+      }, {
+        "dir": '/other-dir2',
+        "packagePath": '/abc/inner'
+      }, {
+        "dir": '/other-dir3',
+        "packagePath": '/def'
+      }
+    ],
+    "output": '/home/user/.initrd'
+  }, (err, data) => {
     t.error(err, 'no error');
     t.same(data.bundle, [
-      { path: '/home/user/mydir/index.js',
-        relativePath: 'index.js',
-        name: '/index.js' },
-      { path: '/home/user/mydir/node_modules/module1/index.js',
-        relativePath: 'node_modules/module1/index.js',
-        name: '/node_modules/module1/index.js' },
-      { path: '/home/user/mydir/node_modules/module1/package.json',
-        relativePath: 'node_modules/module1/package.json',
-        name: '/node_modules/module1/package.json' },
-      { path: '/home/user/mydir/node_modules/runtimejs/runtimecorelib.json',
-        relativePath: 'node_modules/runtimejs/runtimecorelib.json',
-        name: '/node_modules/runtimejs/runtimecorelib.json' },
-      { path: '/home/user/mydir/other-file.js',
-        relativePath: 'other-file.js',
-        name: '/other-file.js' },
-      { path: '/other-dir/entry.js',
-        relativePath: 'entry.js',
-        name: '/abc/entry.js' },
-      { path: '/other-dir/subdir/other-subdir/f.js',
-        relativePath: 'subdir/other-subdir/f.js',
-        name: '/abc/subdir/other-subdir/f.js' },
-      { path: '/other-dir2/entry.js',
-        relativePath: 'entry.js',
-        name: '/abc/inner/entry.js' },
-      { path: '/other-dir2/subdir/other-subdir/f.js',
-        relativePath: 'subdir/other-subdir/f.js',
-        name: '/abc/inner/subdir/other-subdir/f.js' },
-      { path: '/other-dir3/entry.js',
-        relativePath: 'entry.js',
-        name: '/def/entry.js' },
-      { path: '/other-dir3/subdir/other-subdir/f.js',
-        relativePath: 'subdir/other-subdir/f.js',
-        name: '/def/subdir/other-subdir/f.js' }
+      { "path": '/home/user/mydir/index.js',
+        "relativePath": 'index.js',
+        "name": '/index.js' },
+      { "path": '/home/user/mydir/node_modules/module1/index.js',
+        "relativePath": 'node_modules/module1/index.js',
+        "name": '/node_modules/module1/index.js' },
+      { "path": '/home/user/mydir/node_modules/module1/package.json',
+        "relativePath": 'node_modules/module1/package.json',
+        "name": '/node_modules/module1/package.json' },
+      { "path": '/home/user/mydir/node_modules/runtimejs/runtimecorelib.json',
+        "relativePath": 'node_modules/runtimejs/runtimecorelib.json',
+        "name": '/node_modules/runtimejs/runtimecorelib.json' },
+      { "path": '/home/user/mydir/other-file.js',
+        "relativePath": 'other-file.js',
+        "name": '/other-file.js' },
+      { "path": '/other-dir/entry.js',
+        "relativePath": 'entry.js',
+        "name": '/abc/entry.js' },
+      { "path": '/other-dir/subdir/other-subdir/f.js',
+        "relativePath": 'subdir/other-subdir/f.js',
+        "name": '/abc/subdir/other-subdir/f.js' },
+      { "path": '/other-dir2/entry.js',
+        "relativePath": 'entry.js',
+        "name": '/abc/inner/entry.js' },
+      { "path": '/other-dir2/subdir/other-subdir/f.js',
+        "relativePath": 'subdir/other-subdir/f.js',
+        "name": '/abc/inner/subdir/other-subdir/f.js' },
+      { "path": '/other-dir3/entry.js',
+        "relativePath": 'entry.js',
+        "name": '/def/entry.js' },
+      { "path": '/other-dir3/subdir/other-subdir/f.js',
+        "relativePath": 'subdir/other-subdir/f.js',
+        "name": '/def/subdir/other-subdir/f.js' }
     ], 'bundle files');
     mock.restore();
     t.end();
   });
 });
 
-test('package and set custom entry points', function(t) {
+test('package and set custom entry points', (t) => {
   mock({
     '/home/user/mydir': {
       'index.js': 'console.log("OK")',
@@ -279,15 +286,17 @@ test('package and set custom entry points', function(t) {
   });
 
   createPackage({
-    dir: '/home/user/mydir',
-    dirs: [{
-      dir: '/home/user/mydir',
-      packagePath: ''
-    }],
-    entry: '/z/index.js',
-    systemEntry: '/abc/js.js',
-    output: '/home/user/.initrd'
-  }, function(err, data) {
+    "dir": '/home/user/mydir',
+    "dirs": [
+      {
+        "dir": '/home/user/mydir',
+        "packagePath": ''
+      }
+    ],
+    "entry": '/z/index.js',
+    "systemEntry": '/abc/js.js',
+    "output": '/home/user/.initrd'
+  }, (err, data) => {
     t.error(err, 'no error');
 
     t.is(data.indexName, '/abc/js.js');
@@ -298,7 +307,7 @@ test('package and set custom entry points', function(t) {
   });
 });
 
-test('fs loop', function(t) {
+test('fs loop', (t) => {
   mock({
     '/home/user/mydir': {
       'index.js': 'console.log("OK")',
@@ -311,26 +320,28 @@ test('fs loop', function(t) {
         'runtimejs': {
           'runtimecorelib.json': '{"kernelVersion":1}'
         },
-        'other': mock.symlink({ path: './runtimejs' })
+        'other': mock.symlink({ "path": './runtimejs' })
       }
     }
   });
 
   createPackage({
-    dir: '/home/user/mydir',
-    dirs: [{
-      dir: '/home/user/mydir',
-      packagePath: ''
-    }],
-    output: '/home/user/.initrd'
-  }, function(err, data) {
+    "dir": '/home/user/mydir',
+    "dirs": [
+      {
+        "dir": '/home/user/mydir',
+        "packagePath": ''
+      }
+    ],
+    "output": '/home/user/.initrd'
+  }, (err, data) => {
     t.is(err, 'file system loop detected, path "/home/user/mydir/node_modules/runtimejs"');
     mock.restore();
     t.end();
   });
 });
 
-test('directory no runtime.js', function(t) {
+test('directory no runtime.js', (t) => {
   mock({
     '/home/user/mydir': {
       'index.js': 'console.log("OK")',
@@ -345,20 +356,22 @@ test('directory no runtime.js', function(t) {
   });
 
   createPackage({
-    dir: '/home/user/mydir',
-    dirs: [{
-      dir: '/home/user/mydir',
-      packagePath: ''
-    }],
-    output: '/home/user/.initrd'
-  }, function(err, data) {
+    "dir": '/home/user/mydir',
+    "dirs": [
+      {
+        "dir": '/home/user/mydir',
+        "packagePath": ''
+      }
+    ],
+    "output": '/home/user/.initrd'
+  }, (err, data) => {
     t.is(err, 'directory does not contain runtime.js library, please run "npm install runtimejs"');
     mock.restore();
     t.end();
   });
 });
 
-test('directory multiple runtime.js copies', function(t) {
+test('directory multiple runtime.js copies', (t) => {
   mock({
     '/home/user/mydir': {
       'index.js': 'console.log("OK")',
@@ -379,13 +392,15 @@ test('directory multiple runtime.js copies', function(t) {
   });
 
   createPackage({
-    dir: '/home/user/mydir',
-    dirs: [{
-      dir: '/home/user/mydir',
-      packagePath: ''
-    }],
-    output: '/home/user/.initrd'
-  }, function(err, data) {
+    "dir": '/home/user/mydir',
+    "dirs": [
+      {
+        "dir": '/home/user/mydir',
+        "packagePath": ''
+      }
+    ],
+    "output": '/home/user/.initrd'
+  }, (err, data) => {
     t.is(err, 'found two copies of the runtime.js library at "/home/user/mydir/node_modules/other-runtimejs" and "/home/user/mydir/node_modules/runtimejs"');
     mock.restore();
     t.end();

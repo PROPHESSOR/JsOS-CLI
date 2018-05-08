@@ -13,9 +13,10 @@
 // limitations under the License.
 
 'use strict';
-var qemu = require('../run/qemu');
-var getRuntime = require('../run/get-runtime');
-var readInitrd = require('../pack/read-initrd');
+
+const qemu = require('../run/qemu');
+const getRuntime = require('../run/get-runtime');
+const readInitrd = require('../pack/read-initrd');
 
 module.exports = function(args, cb) {
   if (args._.length === 0) {
@@ -25,18 +26,18 @@ module.exports = function(args, cb) {
   // fix QEMU stdout on Windows
   process.env.SDL_STDIO_REDIRECT = 'no';
 
-  var kernelFile = String(args.kernel || '');
-  var initrdFile = String(args._[0] || global.ROOT_DIRECTORY || '');
+  let kernelFile = String(args.kernel || '');
+  const initrdFile = String(args._[0] || global.ROOT_DIRECTORY || '');
 
-  var fileData = readInitrd(initrdFile);
+  const fileData = readInitrd(initrdFile);
   if (!fileData) {
     return cb('ramdisk bundle read error');
   }
   
-  var qemuNet = args.net;
-  var qemuNetdev = args.netdev;
+  const qemuNet = args.net;
+  const qemuNetdev = args.netdev;
 
-  var extraPorts = [];
+  let extraPorts = [];
   if (typeof args.port === 'number') {
     extraPorts = [args.port];
   }
@@ -44,20 +45,20 @@ module.exports = function(args, cb) {
     extraPorts = args.port;
   }
 
-  var qemuNetdump = !!args.netdump;
-  var qemuCurses = !!args.curses;
-  var qemuKVM = !!args.kvm;
-  var qemuUSB = !!args.usb;
-  var qemuPCSpk = !!args.pcspk;
-  var qemuAppend = args.append || '';
-  var qemuNographic = !!args.nographic;
-  var qemuVirtioRng = !!args['virtio-rng'];
-  var qemuCommandAppend = args['append-qemu'] || '';
+  const qemuNetdump = !!args.netdump;
+  const qemuCurses = !!args.curses;
+  const qemuKVM = !!args.kvm;
+  const qemuUSB = !!args.usb;
+  const qemuPCSpk = !!args.pcspk;
+  const qemuAppend = args.append || '';
+  const qemuNographic = !!args.nographic;
+  const qemuVirtioRng = !!args['virtio-rng'];
+  const qemuCommandAppend = args['append-qemu'] || '';
 
-  var dryRun = !!args['dry-run'];
-  var verbose = !!args.verbose;
+  const dryRun = !!args['dry-run'];
+  const verbose = !!args.verbose;
 
-  var drives = [];
+  let drives = [];
   if (typeof args.drive === 'string') {
     drives = [args.drive];
   }
@@ -65,7 +66,7 @@ module.exports = function(args, cb) {
     drives = args.drive;
   }
 
-  getRuntime(fileData.kernelVer, kernelFile, !!args.local, function(err, runtimeFile) {
+  getRuntime(fileData.kernelVer, kernelFile, !!args.local, (err, runtimeFile) => {
     if (err) {
       return cb(err)
     }
@@ -73,23 +74,23 @@ module.exports = function(args, cb) {
     kernelFile = runtimeFile;
 
     qemu({
-      initrd: initrdFile,
-      kernel: kernelFile,
-      net: qemuNet,
-      netdev: qemuNetdev,
-      netdump: qemuNetdump,
-      curses: qemuCurses,
-      kvm: qemuKVM,
-      usb: qemuUSB,
-      pcspk: qemuPCSpk,
-      qemuCommandAppend: qemuCommandAppend,
-      append: qemuAppend,
-      dryRun: dryRun,
-      verbose: verbose,
-      virtioRng: qemuVirtioRng,
-      nographic: qemuNographic,
-      ports: extraPorts.filter(Boolean),
-      drives: drives.filter(Boolean)
+      "initrd": initrdFile,
+      "kernel": kernelFile,
+      "net": qemuNet,
+      "netdev": qemuNetdev,
+      "netdump": qemuNetdump,
+      "curses": qemuCurses,
+      "kvm": qemuKVM,
+      "usb": qemuUSB,
+      "pcspk": qemuPCSpk,
+      "qemuCommandAppend": qemuCommandAppend,
+      "append": qemuAppend,
+      "dryRun": dryRun,
+      "verbose": verbose,
+      "virtioRng": qemuVirtioRng,
+      "nographic": qemuNographic,
+      "ports": extraPorts.filter(Boolean),
+      "drives": drives.filter(Boolean)
     }, cb);
   });
 };

@@ -14,17 +14,17 @@
 
 'use strict';
 
-var exec = require('../run/shell-exec');
-var testCmd = require('../utils/testCmd');
-var path = require('path');
-var os = require('os');
-var fs = require('fs');
+const exec = require('../run/shell-exec');
+const testCmd = require('../utils/testCmd');
+const path = require('path');
+const os = require('os');
+const fs = require('fs');
 
 // Some code from generateGUID used from http://stackoverflow.com/a/2117523/6620880
 // Courtesy of broofa on StackOverflow (http://stackoverflow.com/users/109538)
 function generateGUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
 }
@@ -41,7 +41,7 @@ const multipliers = {
 const letterRegex = /[A-Za-z]/;
 
 function toMB(size) {
-  var suffix = size.substr(size.length - 1);
+  let suffix = size.substr(size.length - 1);
   if (!letterRegex.test(suffix)) suffix = 'B';
   return parseInt(size, 10) * multipliers[suffix.toUpperCase()];
 }
@@ -49,25 +49,25 @@ function toMB(size) {
 module.exports = function(opts, cb) {
   testCmd('diskpart', true);
 
-  var guid = generateGUID();
-  var vhdName = os.tmpdir() + path.sep + 'runtime-tmp-vhd-' + guid + '.vhd';
-  var tmpScriptName = os.tmpdir() + path.sep + 'runtime-diskpart-' + guid + '.txt';
+  const guid = generateGUID();
+  const vhdName = `${os.tmpdir() + path.sep}runtime-tmp-vhd-${guid}.vhd`;
+  const tmpScriptName = `${os.tmpdir() + path.sep}runtime-diskpart-${guid}.txt`;
   fs.writeFile(tmpScriptName, [
-    'create vdisk file="' + vhdName + '" maximum=' + toMB(opts.size),
+    `create vdisk file="${vhdName}" maximum=${toMB(opts.size)}`,
     'attach vdisk',
     'create partition primary',
-    'format fs=fat32 label="' + opts.label + '" quick',
+    `format fs=fat32 label="${opts.label}" quick`,
     'detach vdisk'
-  ].join('\n'), function(err) {
+  ].join('\n'), (err) => {
     if (err) return cb('could not write the disk formatting script');
-    exec('diskpart /s ' + tmpScriptName, function(code, output) {
-      fs.unlink(opts.filename, function(err) {
+    exec(`diskpart /s ${tmpScriptName}`, (code, output) => {
+      fs.unlink(opts.filename, (err) => {
         if (err) return cb('could not unlink the old disk image');
-        exec('qemu-img convert -f vpc -O raw ' + vhdName + ' ' + opts.filename, function(code, output) {
-          fs.unlink(vhdName, function(err) {
+        exec(`qemu-img convert -f vpc -O raw ${vhdName} ${opts.filename}`, (code, output) => {
+          fs.unlink(vhdName, (err) => {
             if (err) return cb('could not unlink the temporary vhd image');
             // try to cleanup:
-            fs.unlink(tmpScriptName, function(err) {
+            fs.unlink(tmpScriptName, (err) => {
               // if there's an error, ignore it, it's a temporary file anyway
               cb();
             });

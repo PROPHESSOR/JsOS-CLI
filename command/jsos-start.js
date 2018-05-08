@@ -14,12 +14,13 @@
 // limitations under the License.
 
 'use strict';
-var runtimePack = require('./jsos-pack');
-var runtimeRun = require('./jsos-run');
+
+const runtimePack = require('./jsos-pack');
+const runtimeRun = require('./jsos-run');
 
 module.exports = function(args, cb) {
   args._ = ['./'];
-  runtimePack(args, function(err) {
+  runtimePack(args, (err) => {
     if (err) {
       return cb(err);
     }

@@ -13,75 +13,76 @@
 // limitations under the License.
 
 'use strict';
-var test = require('tape');
-var path = require('path');
-var runtimePack = require('../command/runtime-pack');
-var runtimeStart = require('../command/runtime-start');
 
-test('package ramdisk: ok', function(t) {
+const test = require('tape');
+const path = require('path');
+const runtimePack = require('../command/runtime-pack');
+const runtimeStart = require('../command/runtime-start');
+
+test('package ramdisk: ok', (t) => {
   runtimePack({
-    _: [path.resolve(__dirname, 'project-ok')]
-  }, function(err) {
+    "_": [path.resolve(__dirname, 'project-ok')]
+  }, (err) => {
     t.ok(!err);
     t.end();
   })
 });
 
-test('package ramdisk: ok, list files', function(t) {
+test('package ramdisk: ok, list files', (t) => {
   runtimePack({
-    _: [path.resolve(__dirname, 'project-ok')],
+    "_": [path.resolve(__dirname, 'project-ok')],
     'list-files': true
-  }, function(err) {
+  }, (err) => {
     t.ok(!err);
     t.end();
   })
 });
 
-test('package ramdisk: custom entry point', function(t) {
+test('package ramdisk: custom entry point', (t) => {
   runtimePack({
-    _: [path.resolve(__dirname, 'project-ok')],
-    entry: './custom'
-  }, function(err) {
+    "_": [path.resolve(__dirname, 'project-ok')],
+    "entry": './custom'
+  }, (err) => {
     t.ok(!err);
     t.end();
   })
 });
 
-test('package ramdisk: no runtime js', function(t) {
+test('package ramdisk: no runtime js', (t) => {
   runtimePack({
-    _: [path.resolve(__dirname, 'project-no-runtimejs')]
-  }, function(err) {
+    "_": [path.resolve(__dirname, 'project-no-runtimejs')]
+  }, (err) => {
     t.equal(err, 'directory does not contain runtime.js library, please run "npm install runtimejs"');
     t.end();
   })
 });
 
-test('package ramdisk: multiple runtime js copies', function(t) {
+test('package ramdisk: multiple runtime js copies', (t) => {
   runtimePack({
-    _: [path.resolve(__dirname, 'project-multiple-runtimejs')]
-  }, function(err) {
+    "_": [path.resolve(__dirname, 'project-multiple-runtimejs')]
+  }, (err) => {
     t.ok(err.indexOf('found two copies of the runtime.js library') === 0);
     t.end();
   })
 });
 
-test('start', function(t) {
-  var cwd = process.cwd;
+test('start', (t) => {
+  const cwd = process.cwd;
   process.cwd = function() {
     return path.resolve(__dirname, 'project-ok');
   };
   runtimeStart({
-    _: [path.resolve(__dirname, 'project-ok')],
-    verbose: true,
+    "_": [path.resolve(__dirname, 'project-ok')],
+    "verbose": true,
     'dry-run': true
-  }, function(err) {
+  }, (err) => {
     t.ok(!err);
     process.cwd = cwd;
     t.end();
   })
 });
 
-test('runtime command', function(t) {
+test('runtime command', (t) => {
   require('../bin/runtime');
   t.end();
 });

@@ -13,57 +13,60 @@
 // limitations under the License.
 
 'use strict';
-var fs = require('fs');
-var path = require('path');
+
+const fs = require('fs');
+const path = require('path');
 
 module.exports = function(args, cb) {
   if (args._.length === 0) {
     return cb('no directory specified');
   }
 
-  var dir = path.resolve(args._[0]);
+  const dir = path.resolve(args._[0]);
   if (!dir) {
     return cb('invalid directory specified');
   }
 
-  var output = '';
+  let output = '';
   if (args.output) {
     output = args.output;
   }
 
-  var addDirs = [];
+  let addDirs = [];
   if (args['add-dir']) {
     addDirs = Array.isArray(args['add-dir']) ? args['add-dir'] : [args['add-dir']];
   }
 
-  var dirs = [{
-    dir: dir,
-    packagePath: ''
-  }].concat(addDirs.map(function(d) {
-    var parts = String(d).split(':');
+  const dirs = [
+    {
+      "dir": dir,
+      "packagePath": ''
+    }
+  ].concat(addDirs.map((d) => {
+    const parts = String(d).split(':');
     if (parts.length === 1) {
       return {
-        dir: path.resolve(parts[0]),
-        packagePath: '/' + path.basename(parts[0])
+        "dir": path.resolve(parts[0]),
+        "packagePath": `/${path.basename(parts[0])}`
       };
     }
 
     return {
-      dir: path.resolve(parts[0]),
-      packagePath: parts[1]
+      "dir": path.resolve(parts[0]),
+      "packagePath": parts[1]
     };
   }));
 
-  dirs.forEach(function(d) {
+  dirs.forEach((d) => {
     try {
       fs.statSync(d.dir);
     } catch (e) {
-      return cb('directory "' + d.dir + '" does not exist');
+      return cb(`directory "${d.dir}" does not exist`);
     }
 
     // Add leading slash
     if (d.packagePath.slice(0, 1) !== '/') {
-      d.packagePath = '/' + d.packagePath;
+      d.packagePath = `/${d.packagePath}`;
     }
 
     // Remove trailing slash
@@ -72,21 +75,21 @@ module.exports = function(args, cb) {
     }
   });
 
-  var ignore = [];
+  let ignore = [];
   if (args.ignore) {
     ignore = Array.isArray(args.ignore) ? args.ignore : [args.ignore];
   }
 
-  var verbose = !!args.verbose;
+  const verbose = !!args.verbose;
 
   require('../pack')({
-    dir: dir,
-    dirs: dirs,
-    listFiles: args['list-files'],
-    ignore: ignore,
-    verbose: verbose,
-    entry: args.entry,
-    systemEntry: args['system-entry'],
-    output: output
+    "dir": dir,
+    "dirs": dirs,
+    "listFiles": args['list-files'],
+    "ignore": ignore,
+    "verbose": verbose,
+    "entry": args.entry,
+    "systemEntry": args['system-entry'],
+    "output": output
   }, cb);
 };

@@ -13,12 +13,13 @@
 // limitations under the License.
 
 'use strict';
-var chokidar = require('chokidar');
-var runtimeStart = require('./runtime-start');
-var chalk = require('chalk');
-var shell = require('shelljs');
 
-var starting = true;
+const chokidar = require('chokidar');
+const runtimeStart = require('./runtime-start');
+const chalk = require('chalk');
+const shell = require('shelljs');
+
+let starting = true;
 
 function startError(err) {
   if (!err) {
@@ -26,14 +27,14 @@ function startError(err) {
   }
 
   if (typeof err === 'string') {
-    console.log(chalk.red('error: ' + err));
+    console.log(chalk.red(`error: ${err}`));
   } else {
-    console.log(chalk.red('error: ' + err.stack));
+    console.log(chalk.red(`error: ${err.stack}`));
   }
 }
 
 module.exports = function(args, cb) {
-  runtimeStart(args, function(err) {
+  runtimeStart(args, (err) => {
     starting = false;
     if (err) {
       startError(err);
@@ -41,9 +42,9 @@ module.exports = function(args, cb) {
   });
 
   chokidar.watch(process.cwd(), {
-    ignored: /[\/\\]\./,
-    ignoreInitial:true
-  }).on('all', function(event, path) {
+    "ignored": /[\/\\]\./,
+    "ignoreInitial": true
+  }).on('all', (event, path) => {
     if (starting) {
       return;
     }
@@ -56,7 +57,7 @@ module.exports = function(args, cb) {
       global.SPAWNED_PROCESS = null;
     }
 
-    runtimeStart(args, function(err) {
+    runtimeStart(args, (err) => {
       starting = false;
       if (err) {
         startError(err);

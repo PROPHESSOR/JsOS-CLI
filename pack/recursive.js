@@ -13,28 +13,29 @@
 // limitations under the License.
 
 'use strict';
-var fs = require('fs');
-var pathUtils = require('path');
-var ignore = require('ignore');
-var dotFileRegex = /^\./;
-var ignoreFilename = '.runtimeignore';
+
+const fs = require('fs');
+const pathUtils = require('path');
+const ignore = require('ignore');
+const dotFileRegex = /^\./;
+const ignoreFilename = '.runtimeignore';
 
 function recursiveWalk(basedir, ignoreList) {
-  var visited = {};
-  var depth = 0;
-  var files = [];
-  var ignoreRules = [];
+  const visited = {};
+  let depth = 0;
+  const files = [];
+  const ignoreRules = [];
 
   if (ignoreList && ignoreList.length > 0) {
     ignoreRules.push({
-      base: basedir,
-      filter: ignore().add(ignoreList).createFilter()
+      "base": basedir,
+      "filter": ignore().add(ignoreList).createFilter()
     });
   }
 
   function walk(path, accessPath) {
-    var stats = fs.lstatSync(path);
-    var baseName = pathUtils.basename(path);
+    const stats = fs.lstatSync(path);
+    const baseName = pathUtils.basename(path);
 
     if (dotFileRegex.test(baseName)) {
       return;
@@ -50,7 +51,7 @@ function recursiveWalk(basedir, ignoreList) {
 
     if (stats.isDirectory()) {
       if (visited[path]) {
-        throw 'file system loop detected, path "' + path + '"';
+        throw `file system loop detected, path "${path}"`;
       }
 
       visited[path] = true;
@@ -69,35 +70,35 @@ function recursiveWalk(basedir, ignoreList) {
   }
 
   function walkDir(path, accessPath) {
-    var entries = fs.readdirSync(path);
+    const entries = fs.readdirSync(path);
     if (++depth > 128) {
       return;
     }
 
     if (entries.indexOf(ignoreFilename) >= 0) {
       var entryPath = pathUtils.join(path, ignoreFilename);
-      var rules = fs.readFileSync(entryPath, 'utf8').toString();
+      const rules = fs.readFileSync(entryPath, 'utf8').toString();
       ignoreRules.push({
-        base: accessPath,
-        filter: ignore().add(rules).createFilter()
+        "base": accessPath,
+        "filter": ignore().add(rules).createFilter()
       });
     } else {
       ignoreRules.push(null);
     }
 
-    for (var i = 0; i < entries.length; ++i) {
+    for (let i = 0; i < entries.length; ++i) {
       var entryPath = pathUtils.join(path, entries[i]);
-      var entryAccessPath = pathUtils.join(accessPath, entries[i]);
+      const entryAccessPath = pathUtils.join(accessPath, entries[i]);
 
-      var ignored = false;
+      let ignored = false;
       if (ignoreRules.length > 0) {
-        for (var j = 0; j < ignoreRules.length; ++j) {
-          var rule = ignoreRules[j];
+        for (let j = 0; j < ignoreRules.length; ++j) {
+          const rule = ignoreRules[j];
           if (!rule) {
             continue;
           }
 
-          var relativePath = pathUtils.relative(rule.base, entryAccessPath);
+          const relativePath = pathUtils.relative(rule.base, entryAccessPath);
           if (!rule.filter(relativePath)) {
             ignored = true;
             break;
@@ -117,8 +118,8 @@ function recursiveWalk(basedir, ignoreList) {
   }
 
   function walkLink(path, accessPath) {
-    var linkPath = fs.readlinkSync(path);
-    var realPath = pathUtils.resolve(pathUtils.dirname(path), linkPath);
+    const linkPath = fs.readlinkSync(path);
+    const realPath = pathUtils.resolve(pathUtils.dirname(path), linkPath);
     walk(realPath, pathUtils.join(pathUtils.dirname(accessPath), pathUtils.basename(path)));
   }
 

@@ -13,12 +13,13 @@
 // limitations under the License.
 
 'use strict';
-var rawExec = require('../run/raw-exec');
-var shellExec = require('../run/shell-exec');
-var logs = require('../run/logs');
+
+const rawExec = require('../run/raw-exec');
+const shellExec = require('../run/shell-exec');
+const logs = require('../run/logs');
 
 function printNetdump(cb) {
-  shellExec('tcpdump -ns 0 -X -vvv -r ' + logs.netdumpPath + ' > ' + logs.netdumpLogPath, function(code, output) {
+  shellExec(`tcpdump -ns 0 -X -vvv -r ${logs.netdumpPath} > ${logs.netdumpLogPath}`, (code, output) => {
     if (0 !== code) {
       return cb('tcpdump command failed');
     }
@@ -28,7 +29,7 @@ function printNetdump(cb) {
 }
 
 function printLog(cb) {
-  rawExec('less', [logs.logPath], function(code, output) {
+  rawExec('less', [logs.logPath], (code, output) => {
     if (0 !== code) {
       return cb('log print command failed');
     }
@@ -38,7 +39,7 @@ function printLog(cb) {
 }
 
 module.exports = function(args, cb) {
-  var type = 'log';
+  let type = 'log';
   if (args._.length > 0) {
     type = args._[0];
   }
@@ -51,5 +52,5 @@ module.exports = function(args, cb) {
     return printLog(cb);
   }
 
-  cb('unknown VM output type "' + type + '"');
+  cb(`unknown VM output type "${type}"`);
 };

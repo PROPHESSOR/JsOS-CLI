@@ -14,13 +14,13 @@
 
 'use strict';
 
-var chalk = require('chalk');
-var shell = require('shelljs');
-var exec = require('../run/shell-exec');
-var testCmd = require('../utils/testCmd');
+const chalk = require('chalk');
+const shell = require('shelljs');
+const exec = require('../run/shell-exec');
+const testCmd = require('../utils/testCmd');
 
 module.exports = function (opts, cb) {
-  var helper;
+  let helper;
   if (process.platform === 'darwin') {
     helper = require('./macos');
   } else if (process.platform === 'win32') {

@@ -20,14 +20,14 @@ const exec = require('../run/shell-exec');
 
 
 module.exports = function (opts) {
-    const filename = opts._[0];
-    if (process.platform === 'darwin') {
-        return console.log(chalk.red("Mac OS doesn't supported!"));
-    } else if (process.platform === 'win32') {
-        return console.log(chalk.red("Windows doesn't supported!"))
-    } else if (process.platform === 'linux') { //FIXME: It doesn't works! Output file is broken
-        exec(`{ printf "\x1f\x8b\x08\x00\x00\x00\x00\x00"; tail -c +25 ${filename}; } > ${filename}.gz`,(e)=>console.log(e?chalk.red(e):chalk.green("OK!!!")));
-    } else {
-        return console.log(chalk.red('unknown/unsupported platform'));
-    }
+  const filename = opts._[0];
+  if (process.platform === 'darwin') {
+    return console.log(chalk.red("Mac OS doesn't supported!"));
+  } else if (process.platform === 'win32') {
+    return console.log(chalk.red("Windows doesn't supported!"))
+  } else if (process.platform === 'linux') { //FIXME: It doesn't works! Output file is broken
+    exec(`{ printf "\x1f\x8b\x08\x00\x00\x00\x00\x00"; tail -c +25 ${filename}; } > ${filename}.gz`, (e) => console.log(e?chalk.red(e):chalk.green("OK!!!")));
+  } else {
+    return console.log(chalk.red('unknown/unsupported platform'));
+  }
 };

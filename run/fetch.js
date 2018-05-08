@@ -13,25 +13,26 @@
 // limitations under the License.
 
 'use strict';
-var request = require('request');
-var gunzip = require('gunzip-maybe');
-var fs = require('fs');
-var shell = require('shelljs');
-var path = require('path');
-var progressStream = require('progress-stream');
-var log = require('single-line-log').stdout;
-var prettyBytes = require('pretty-bytes');
+
+const request = require('request');
+const gunzip = require('gunzip-maybe');
+const fs = require('fs');
+const shell = require('shelljs');
+const path = require('path');
+const progressStream = require('progress-stream');
+const log = require('single-line-log').stdout;
+const prettyBytes = require('pretty-bytes');
 
 module.exports = function(kernelVersion, shouldBeLocal, cb) {
-  var basePath = shouldBeLocal ? __dirname : process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
-  var kernelsDir = path.resolve(basePath, '.jsos-kernel');
+  const basePath = shouldBeLocal ? __dirname : process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+  const kernelsDir = path.resolve(basePath, '.jsos-kernel');
   if (!shell.test('-d', kernelsDir)) {
     shell.mkdir(kernelsDir);
   }
 
-  var tmpName = 'jsos.' + kernelVersion + '.download';
-  var tmpFile = path.resolve(kernelsDir, tmpName);
-  var resultFile = path.resolve(kernelsDir, 'jsos.' + kernelVersion);
+  const tmpName = `jsos.${kernelVersion}.download`;
+  const tmpFile = path.resolve(kernelsDir, tmpName);
+  const resultFile = path.resolve(kernelsDir, `jsos.${kernelVersion}`);
 
   if (shell.test('-f', resultFile)) {
     return cb(null, resultFile);
@@ -41,8 +42,8 @@ module.exports = function(kernelVersion, shouldBeLocal, cb) {
     shell.rm('-f', tmpFile);
   }
 
-  var displayName = 'runtime.gz.' + kernelVersion;
-  var url = 'https://github.com/JsOS-Team/jsos-kernel-builds/raw/master/runtime.gz.' + kernelVersion;
+  const displayName = `runtime.gz.${kernelVersion}`;
+  const url = `https://github.com/JsOS-Team/jsos-kernel-builds/raw/master/runtime.gz.${kernelVersion}`;
 
   /*// Newer versions are stored as GitHub releases
   if (kernelVersion > 3) {
@@ -51,24 +52,24 @@ module.exports = function(kernelVersion, shouldBeLocal, cb) {
     url = 'https://github.com/runtimejs/runtime/releases/download/v' + tag + '/runtime.gz';
   }*/
 
-  var req = request(url);
+  const req = request(url);
 
-  req.on('response', function(res) {
+  req.on('response', (res) => {
     if (res.statusCode !== 200) {
-      return cb('jsos kernel "' + url + '" download error (http ' + res.statusCode + ')');
+      return cb(`jsos kernel "${url}" download error (http ${res.statusCode})`);
     }
 
-    var totalLength = Number(res.headers['content-length']);
+    const totalLength = Number(res.headers['content-length']);
 
-    var stream = res;
+    let stream = res;
 
     if (totalLength) {
-      var progress = progressStream({
-        length: totalLength
+      const progress = progressStream({
+        "length": totalLength
       });
 
-      progress.on('progress', function(p) {
-        var value = p.percentage | 0;
+      progress.on('progress', (p) => {
+        const value = p.percentage | 0;
 
         if (value <= 0) {
           return;
@@ -79,17 +80,17 @@ module.exports = function(kernelVersion, shouldBeLocal, cb) {
           return;
         }
 
-        var left = (value / 2) | 0;
-        var right = 50 - left;
+        const left = (value / 2) | 0;
+        const right = 50 - left;
 
-        var progressBar = '[' + Array(left + 1).join('=') + '>' + Array(right).join(' ') + ']';
-        log('Downloading ' + displayName + '...\n' + progressBar + ' ' + value + '% of ' + prettyBytes(totalLength) + '');
+        const progressBar = `[${Array(left + 1).join('=')}>${Array(right).join(' ')}]`;
+        log(`Downloading ${displayName}...\n${progressBar} ${value}% of ${prettyBytes(totalLength)}`);
       });
 
       stream = stream.pipe(progress);
     }
 
-    log('Downloading ' + displayName + '...');
+    log(`Downloading ${displayName}...`);
 
     function complete(err) {
       if (err) {
@@ -100,7 +101,7 @@ module.exports = function(kernelVersion, shouldBeLocal, cb) {
       cb(null, resultFile);
     }
 
-    var out = fs.createWriteStream(tmpFile, { flags: 'w', defaultEncoding: 'binary' });
+    const out = fs.createWriteStream(tmpFile, { "flags": 'w', "defaultEncoding": 'binary' });
     out.on('error', complete);
     out.on('finish', complete);
 

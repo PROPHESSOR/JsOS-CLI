@@ -14,20 +14,21 @@
 // limitations under the License.
 
 'use strict';
-var shell = require('shelljs');
-var path = require('path');
-var fetch = require('./fetch');
+
+const shell = require('shelljs');
+const path = require('path');
+const fetch = require('./fetch');
 
 module.exports = function(kernelVersion, shouldBeLocal, cb) {
-  var basePath = shouldBeLocal ? __dirname : process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
-  var kernelsDir = path.resolve(basePath, '.jsos-kernel');
+  const basePath = shouldBeLocal ? __dirname : process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+  const kernelsDir = path.resolve(basePath, '.jsos-kernel');
   if (!shell.test('-d', kernelsDir)) {
     shell.mkdir(kernelsDir);
   }
 
-  var tmpName = 'jsos.' + kernelVersion + '.download';
-  var tmpFile = path.resolve(kernelsDir, tmpName);
-  var resultFile = path.resolve(kernelsDir, 'jsos.' + kernelVersion);
+  const tmpName = `jsos.${kernelVersion}.download`;
+  const tmpFile = path.resolve(kernelsDir, tmpName);
+  const resultFile = path.resolve(kernelsDir, `jsos.${kernelVersion}`);
 
   if (shell.test('-f', resultFile)) {
     return cb(null, resultFile);

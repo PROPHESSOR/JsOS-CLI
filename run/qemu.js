@@ -13,13 +13,14 @@
 // limitations under the License.
 
 'use strict';
-var chalk = require('chalk');
-var shell = require('shelljs');
-var shellExec = require('./shell-exec');
-var rawExec = require('./raw-exec');
-var logs = require('./logs');
 
-var qemu = 'qemu-system-x86_64';
+const chalk = require('chalk');
+const shell = require('shelljs');
+const shellExec = require('./shell-exec');
+const rawExec = require('./raw-exec');
+const logs = require('./logs');
+
+const qemu = 'qemu-system-x86_64';
 
 function testQemu(dryRun) {
   if (!shell.which(qemu)) {
@@ -31,8 +32,8 @@ function testQemu(dryRun) {
 }
 
 function getQemuArgs(opts) {
-  var initrdPath = opts.initrd;
-  var kernelPath = opts.kernel;
+  const initrdPath = opts.initrd;
+  const kernelPath = opts.kernel;
 
   if (!initrdPath) {
     shell.echo(chalk.red('error: initrd file required'));
@@ -40,25 +41,25 @@ function getQemuArgs(opts) {
   }
 
   if (!shell.test('-f', initrdPath)) {
-    shell.echo(chalk.red('error: initrd file "' + initrdPath + '" does not exist'));
+    shell.echo(chalk.red(`error: initrd file "${initrdPath}" does not exist`));
     return shell.exit(1);
   }
 
   if (!shell.test('-f', kernelPath)) {
-    shell.echo(chalk.red('error: kernel file "' + kernelPath + '" does not exist'));
+    shell.echo(chalk.red(`error: kernel file "${kernelPath}" does not exist`));
     return shell.exit(1);
   }
 
-  var a = [
+  const a = [
     '-m 512',
     '-smp 1',
     '-s',
-    '-kernel ' + kernelPath,
-    '-initrd ' + initrdPath,
+    `-kernel ${kernelPath}`,
+    `-initrd ${initrdPath}`
   ];
 
   if (opts.net && opts.net !== 'none') {
-    a.push('-net nic,model='+opts.netdev+',macaddr=1a:46:0b:ca:bc:7c');
+    a.push(`-net nic,model=${opts.netdev},macaddr=1a:46:0b:ca:bc:7c`);
 
     switch (opts.net) {
     case 'tap':
@@ -68,7 +69,7 @@ function getQemuArgs(opts) {
     case 'user':
       var pushString = '-net user,net=192.168.76.0/24,dhcpstart=192.168.76.9,hostfwd=udp::9000-:9000,hostfwd=tcp::9000-:9000';
       for (var i = 0; i < opts.ports.length; i++) {
-        pushString += ',hostfwd=udp::' + opts.ports[i] + '-:'+ opts.ports[i] + ',hostfwd=tcp::' + opts.ports[i] + '-:' + opts.ports[i];
+        pushString += `,hostfwd=udp::${opts.ports[i]}-:${opts.ports[i]},hostfwd=tcp::${opts.ports[i]}-:${opts.ports[i]}`;
       }
       a.push(pushString);
       break;
@@ -84,7 +85,7 @@ function getQemuArgs(opts) {
   }
 
   if (opts.netdump) {
-    a.push('-net dump,file=' + logs.netdumpPath);
+    a.push(`-net dump,file=${logs.netdumpPath}`);
   }
 
   if (opts.virtioRng) {
@@ -96,11 +97,11 @@ function getQemuArgs(opts) {
     a.push('-no-kvm-irqchip');
   }
 
-  if(opts.usb) {
+  if (opts.usb) {
     a.push('-usb -device usb-ehci,id=ehci -device usb-tablet,bus=usb-bus.0');
   }
 
-  if(opts.pcspk) {
+  if (opts.pcspk) {
     a.push('-soundhw pcspk');
   }
 
@@ -110,13 +111,13 @@ function getQemuArgs(opts) {
 
   if (opts.curses) {
     a.push('-curses');
-    a.push('-serial file:' + logs.logPath);
+    a.push(`-serial file:${logs.logPath}`);
   } else {
     a.push('-serial stdio');
   }
 
   if (opts.append) {
-    a.push('-append "' + opts.append + '"');
+    a.push(`-append "${opts.append}"`);
   }
 
   a.push('-soundhw pcspk');
@@ -125,7 +126,7 @@ function getQemuArgs(opts) {
     for (var i = 0; i < opts.drives.length; i++) {
       // not wrapping the filename in quotes because the Windows command prompt
       // doesn't remove the quotes when passing it to QEMU and causes an "invalid argument" error
-      a.push('-drive file=' + opts.drives[i] + ',if=virtio,media=disk,format=raw');
+      a.push(`-drive file=${opts.drives[i]},if=virtio,media=disk,format=raw`);
     }
   }
 
@@ -135,8 +136,8 @@ function getQemuArgs(opts) {
 module.exports = function(opts, cb) {
   testQemu(opts.dryRun);
 
-  var qemuArgs = getQemuArgs(opts);
-  var line = qemu + ' ' + qemuArgs.join(' ');
+  const qemuArgs = getQemuArgs(opts);
+  const line = `${qemu} ${qemuArgs.join(' ')}`;
 
   if (opts.verbose) {
     console.log(line);

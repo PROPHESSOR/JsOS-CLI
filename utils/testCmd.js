@@ -14,12 +14,12 @@
 
 'use strict';
 
-var shell = require('shelljs');
-var chalk = require('chalk');
+const shell = require('shelljs');
+const chalk = require('chalk');
 
 module.exports = function(cmd, isBuiltin) {
   if (!shell.which(cmd)) {
-    shell.echo(chalk.red('error: ' + cmd + ((isBuiltin) ? ' cannot be found' : ' is not installed (or cannot be found)')));
+    shell.echo(chalk.red(`error: ${cmd}${(isBuiltin) ? ' cannot be found' : ' is not installed (or cannot be found)'}`));
     return shell.exit(1);
   }
 };
