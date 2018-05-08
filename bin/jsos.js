@@ -65,8 +65,8 @@ const runArgs = [
   {
     "name": 'netdev',
     "type": 'string',
-    "default": 'rtl8139',
-    "description": 'Set network device model (defaults to "rtl8139")'
+    "default": 'virtio',
+    "description": 'Set network device model (defaults to "virtio")'
   },
   {
     "name": 'netdump',
