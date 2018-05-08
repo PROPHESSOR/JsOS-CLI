@@ -105,6 +105,10 @@ function getQemuArgs(opts) {
     a.push('-soundhw pcspk');
   }
 
+  if(opts.hd0) {
+    a.push(`-hda `, opts.hd0img); // FIXME: May be it doesn't work
+  }
+
   if (opts.qemuCommandAppend) {
     a.push(String(opts.qemuCommandAppend));
   }
@@ -119,8 +123,6 @@ function getQemuArgs(opts) {
   if (opts.append) {
     a.push(`-append "${opts.append}"`);
   }
-
-  a.push('-soundhw pcspk');
 
   if (opts.drives.length > 0) {
     for (var i = 0; i < opts.drives.length; i++) {

@@ -89,7 +89,7 @@ const runArgs = [
   {
     "name": 'pcspk',
     "type": 'boolean',
-    "default": false,
+    "default": true,
     "description": 'Enable PCSpeaker emulation (if you haven\'t native)'
   },
   {
@@ -157,7 +157,19 @@ const runArgs = [
     "type": 'string',
     "default": '',
     "description": 'A file to attach as a virtio block device'
-  }
+  },
+  {
+    "name": 'hd0',
+    "type": 'boolean',
+    "default": false,
+    "description": 'Mount HD disk image as /hd0/,\ndefaults to "jsos-hd0.img"'
+  },
+  {
+    "name": 'hd0img',
+    "type": 'string',
+    "default": 'jsos-hd0.img',
+    "description": 'Disk image to mount (if --hd0 is enabled),\ndefaults to "jsos-hd0.img"'
+  },
 ];
 
 const mkimgArgs = [

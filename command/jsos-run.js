@@ -18,7 +18,7 @@ const qemu = require('../run/qemu');
 const getRuntime = require('../run/get-runtime');
 const readInitrd = require('../pack/read-initrd');
 
-module.exports = function(args, cb) {
+module.exports = function (args, cb) {
   if (args._.length === 0) {
     return cb('no ramdisk bundle specified');
   }
@@ -33,7 +33,7 @@ module.exports = function(args, cb) {
   if (!fileData) {
     return cb('ramdisk bundle read error');
   }
-  
+
   const qemuNet = args.net;
   const qemuNetdev = args.netdev;
 
@@ -58,6 +58,8 @@ module.exports = function(args, cb) {
   const dryRun = !!args['dry-run'];
   const verbose = !!args.verbose;
 
+  const { hd0, hd0img } = args;
+
   let drives = [];
   if (typeof args.drive === 'string') {
     drives = [args.drive];
@@ -74,6 +76,9 @@ module.exports = function(args, cb) {
     kernelFile = runtimeFile;
 
     qemu({
+      hd0,
+      hd0img,
+      verbose,
       "initrd": initrdFile,
       "kernel": kernelFile,
       "net": qemuNet,
@@ -86,7 +91,6 @@ module.exports = function(args, cb) {
       "qemuCommandAppend": qemuCommandAppend,
       "append": qemuAppend,
       "dryRun": dryRun,
-      "verbose": verbose,
       "virtioRng": qemuVirtioRng,
       "nographic": qemuNographic,
       "ports": extraPorts.filter(Boolean),
