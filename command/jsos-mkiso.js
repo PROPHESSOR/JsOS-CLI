@@ -36,11 +36,11 @@ function toKB(size) {
 module.exports = function(args, cb) {
   if (args._.length === 0) {
     args._[0] = 'JsOS.iso';
-    args._[1] = ''
+    args._[1] = 'build_jsos'
   }
 
   const filename = String(args._[0]);
-  const foldername = String(args._[1]);
+  const foldername = String(args._[1] || 'build_jsos');
   const kernel = args.kernel;
   const initrd = args.initrd;
   //   var size = String(args.size);
